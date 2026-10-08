@@ -1,0 +1,24 @@
+{
+  "name": "edgeone-imgbed",
+  "version": "1.0.0",
+  "build": {
+    "output": ".",
+    "command": ""
+  },
+  "env": {
+    "IMAGE_KV": {
+      "binding": "IMAGE_KV",
+      "type": "kv_namespace",
+      "id": "your-kv-namespace-id"
+    }
+  },
+  "headers": [
+    {
+      "source": "/i/*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

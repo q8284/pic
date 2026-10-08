@@ -1,0 +1,16 @@
+{
+  "name": "edgeone-imgbed",
+  "version": "1.0.0",
+  "description": "基于腾讯云 EdgeOne Pages 的图床，上传自动转 WebP",
+  "main": "index.html",
+  "scripts": {
+    "deploy": "echo '请在 EdgeOne Pages 控制台部署'",
+    "dev": "edgeone dev"
+  },
+  "keywords": ["imgbed", "image-hosting", "edgeone", "webp", "pages-functions"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@tencent/edgeone-pages-cli": "latest"
+  }
+}
