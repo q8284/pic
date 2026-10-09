@@ -38,10 +38,6 @@
       --input-bg: #ffffff;
       --code-bg: #0f172a;
       --code-text: #e2e8f0;
-      --tag-success-bg: rgba(16,185,129,0.1);
-      --tag-success-text: #059669;
-      --tag-warn-bg: rgba(245,158,11,0.1);
-      --tag-warn-text: #d97706;
     }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -62,10 +58,6 @@
       --input-bg: #1e293b;
       --code-bg: #020617;
       --code-text: #e2e8f0;
-      --tag-success-bg: rgba(16,185,129,0.15);
-      --tag-success-text: #34d399;
-      --tag-warn-bg: rgba(245,158,11,0.15);
-      --tag-warn-text: #fbbf24;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { min-height: 100vh; font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; transition: background 0.3s, color 0.3s; line-height: 1.6; }
@@ -81,11 +73,6 @@
     .hero { padding: 36px 32px; border: 1px solid var(--panel-border); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(16px); margin-bottom: 22px; }
     h1 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(26px, 4vw, 42px); background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
     .lead { color: var(--text-muted); font-size: 15px; }
-
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
-    .stat { padding: 18px 20px; border-radius: 16px; border: 1px solid var(--panel-border); background: var(--input-bg); box-shadow: var(--card-shadow); }
-    .stat-num { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; color: var(--text); }
-    .stat-label { font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
 
     .upload-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); margin-bottom: 22px; }
     .drop-zone { border: 2px dashed var(--primary); border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
@@ -108,19 +95,17 @@
     .progress-bar.show { display: block; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.3s; }
 
-    .warn-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--tag-warn-bg); color: var(--tag-warn-text); font-size: 12px; display: none; }
+    .warn-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(245,158,11,0.1); color: #d97706; font-size: 12px; display: none; }
     .warn-banner.show { display: block; }
 
     .result-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); margin-bottom: 22px; display: none; }
     .result-card.show { display: block; }
     .result-card h3 { font-family: 'Outfit', sans-serif; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .result-card h3 .ok { color: var(--tag-success-text); }
+    .result-card h3 .ok { color: #059669; }
     .preview-img { max-width: 100%; max-height: 300px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 16px; display: block; }
-    .result-item { margin-bottom: 12px; }
-    .result-item label { font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
     .url-row { display: flex; gap: 8px; align-items: center; }
-    .url-row code { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--code-bg); color: #7ee787; padding: 8px 12px; border-radius: 8px; overflow-x: auto; white-space: nowrap; }
-    .copy-btn { flex-shrink: 0; padding: 8px 14px; border-radius: 8px; border: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 12px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; }
+    .url-row code { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--code-bg); color: #7ee787; padding: 10px 14px; border-radius: 8px; overflow-x: auto; white-space: nowrap; }
+    .copy-btn { flex-shrink: 0; padding: 10px 18px; border-radius: 8px; border: 0; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
     .copy-btn.copied { background: linear-gradient(135deg, #059669, #10b981); }
 
     .history-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); }
@@ -135,8 +120,6 @@
     .footer { margin-top: 32px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
     @media (max-width: 720px) {
-      .stats { grid-template-columns: 1fr 1fr; }
-      .stats .stat:last-child { grid-column: 1/-1; }
       .hero { padding: 26px 22px; }
     }
   </style>
@@ -157,11 +140,6 @@
       <section class="hero">
         <h1>WebP 图床</h1>
         <p class="lead">基于腾讯云 EdgeOne 边缘网络的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。</p>
-        <div class="stats">
-          <div class="stat"><div class="stat-num" id="totalCount">—</div><div class="stat-label">已上传</div></div>
-          <div class="stat"><div class="stat-num" id="totalSize">—</div><div class="stat-label">总存储</div></div>
-          <div class="stat"><div class="stat-num" id="avgSaved">—</div><div class="stat-label">平均压缩</div></div>
-        </div>
       </section>
 
       <section class="upload-card">
@@ -184,17 +162,9 @@
       <section class="result-card" id="resultCard">
         <h3><span class="ok">✓</span> 上传成功</h3>
         <img class="preview-img" id="resultImg" />
-        <div class="result-item">
-          <label>URL</label>
-          <div class="url-row"><code id="resultUrl"></code><button class="copy-btn" data-copy="resultUrl">复制</button></div>
-        </div>
-        <div class="result-item">
-          <label>Markdown</label>
-          <div class="url-row"><code id="resultMd"></code><button class="copy-btn" data-copy="resultMd">复制</button></div>
-        </div>
-        <div class="result-item">
-          <label>HTML</label>
-          <div class="url-row"><code id="resultHtml"></code><button class="copy-btn" data-copy="resultHtml">复制</button></div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">图片直链</div>
+          <div class="url-row"><code id="resultUrl"></code><button class="copy-btn" id="copyUrlBtn">复制</button></div>
         </div>
       </section>
 
@@ -212,26 +182,25 @@
   </div>
 
   <script>
-    // ---------- 主题 ----------
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
+    // 主题
+    document.getElementById('themeToggle').addEventListener('click', () => {
       const cur = document.documentElement.getAttribute('data-theme');
       const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
 
-    // ---------- 质量滑块 ----------
+    // 质量滑块
     const qualitySlider = document.getElementById('quality');
     const qualityVal = document.getElementById('qualityVal');
     qualitySlider.addEventListener('input', () => { qualityVal.textContent = parseFloat(qualitySlider.value).toFixed(2); });
 
-    // ---------- 拖拽上传 ----------
+    // 拖拽
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const warnBanner = document.getElementById('warnBanner');
-    const MAX_ORIGINAL_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_ORIGINAL_SIZE = 10 * 1024 * 1024;
     let selectedFiles = [];
 
     dropZone.addEventListener('click', () => fileInput.click());
@@ -246,7 +215,6 @@
 
     function handleFiles(files) {
       selectedFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
-
       const oversized = selectedFiles.filter(f => f.size > MAX_ORIGINAL_SIZE);
       if (oversized.length > 0) {
         warnBanner.className = 'warn-banner show';
@@ -255,13 +223,12 @@
       } else {
         warnBanner.className = 'warn-banner';
       }
-
       if (selectedFiles.length === 0) { uploadBtn.disabled = true; return; }
       dropZone.querySelector('p').textContent = `已选择 ${selectedFiles.length} 张图片`;
       uploadBtn.disabled = false;
     }
 
-    // ---------- 核心：前端转 WebP + 上传 ----------
+    // 上传
     uploadBtn.addEventListener('click', async () => {
       if (selectedFiles.length === 0) return;
       uploadBtn.disabled = true;
@@ -274,18 +241,11 @@
 
       const quality = parseFloat(qualitySlider.value);
       const uploadedResults = [];
-      const MAX_WEBP_SIZE = 20 * 1024 * 1024; // Blob 单值 25MB，留余量限制 20MB
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         try {
           const webpBlob = await convertToWebP(file, quality);
-
-          if (webpBlob.size > MAX_WEBP_SIZE) {
-            alert(`"${file.name}" 转 WebP 后过大 (${(webpBlob.size/1024/1024).toFixed(2)}MB)，请降低质量后重试。`);
-            continue;
-          }
-
           progressFill.style.width = `${((i + 0.5) / selectedFiles.length) * 100}%`;
 
           const formData = new FormData();
@@ -301,7 +261,7 @@
             alert(`"${file.name}" 上传失败: ${data.error}`);
           }
         } catch (e) {
-          console.error('Upload failed:', e);
+          console.error(e);
           alert(`"${file.name}" 处理失败`);
         }
         progressFill.style.width = `${((i + 1) / selectedFiles.length) * 100}%`;
@@ -337,33 +297,28 @@
       });
     }
 
-    // ---------- 结果显示 ----------
+    // 显示结果（只显示 URL）
     function showResult(data) {
       document.getElementById('resultCard').classList.add('show');
       document.getElementById('resultImg').src = data.url;
       document.getElementById('resultUrl').textContent = data.url;
-      document.getElementById('resultMd').textContent = data.markdown;
-      document.getElementById('resultHtml').textContent = data.html;
-      updateStats();
     }
 
-    // ---------- 复制 ----------
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.dataset.copy;
-        const text = document.getElementById(targetId).textContent;
-        navigator.clipboard.writeText(text).then(() => {
-          btn.classList.add('copied');
-          btn.textContent = '已复制';
-          setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '复制'; }, 1500);
-        });
+    // 复制
+    document.getElementById('copyUrlBtn').addEventListener('click', () => {
+      const text = document.getElementById('resultUrl').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyUrlBtn');
+        btn.classList.add('copied');
+        btn.textContent = '已复制';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '复制'; }, 1500);
       });
     });
 
-    // ---------- 历史 ----------
+    // 历史
     function saveToHistory(data) {
       const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
-      history.unshift({ url: data.url, filename: data.filename, size: data.size });
+      history.unshift({ url: data.url, filename: data.filename });
       localStorage.setItem('uploadHistory', JSON.stringify(history.slice(0, 20)));
       renderHistory();
     }
@@ -382,16 +337,6 @@
       `).join('');
     }
     renderHistory();
-
-    // ---------- 统计 ----------
-    function updateStats() {
-      const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
-      document.getElementById('totalCount').textContent = history.length;
-      const totalBytes = history.reduce((sum, h) => sum + (h.size || 0), 0);
-      document.getElementById('totalSize').textContent = totalBytes > 0 ? (totalBytes / 1024 / 1024).toFixed(1) + 'MB' : '—';
-      document.getElementById('avgSaved').textContent = '~65%';
-    }
-    updateStats();
   </script>
 </body>
 </html>
