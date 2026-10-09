@@ -8,3 +8,8 @@
     ]
   }
 }
+{
+  "caches": [
+    { "source": "/img/*", "cacheTtl": 2592000 }
+  ]
+}
