@@ -17,7 +17,7 @@ export default async function onRequest(context) {
 
     if (!ab) {
       const obj = await store.get(key, { consistency: "strong" });
-      if (!obj) return new Response("not found:" + key, { status: 404 });
+      if (!obj) return new Response("not found: " + key, { status: 404 });
       try {
         if (obj instanceof ArrayBuffer) ab = obj;
         else if (obj?.arrayBuffer) ab = await obj.arrayBuffer();
@@ -28,7 +28,8 @@ export default async function onRequest(context) {
         return new Response("parse fail", { status: 500 });
       }
     }
-    if (!ab) return new Response("not found2:" + key, { status: 404 });
+
+    if (!ab) return new Response("not found: " + key, { status: 404 });
 
     return new Response(ab, {
       headers: {
@@ -39,6 +40,6 @@ export default async function onRequest(context) {
     });
   } catch (e) {
     console.error("img-handler-error", e?.message || String(e));
-    return new Response("img error:" + (e?.message || e), { status: 500 });
+    return new Response("img error: " + (e?.message || e), { status: 500 });
   }
 }
