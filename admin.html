@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>图床管理</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 24 24' aria-hidden='true' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='logoGrad' x1='0' y1='0' x2='24' y2='24' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%2314b8a6'/%3E%3Cstop offset='100%25' stop-color='%230891b2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23logoGrad)' d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      const saved = localStorage.getItem("theme");
+      const isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    })();
+  </script>
+  <style>
+    :root, :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --bg-gradient: radial-gradient(circle at top left, rgba(15,118,110,0.08), transparent 42%), radial-gradient(circle at right 20%, rgba(2,132,199,0.06), transparent 38%), linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+      --panel: rgba(255,255,255,0.85);
+      --panel-border: rgba(15,23,42,0.06);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-faint: #64748b;
+      --primary: #0f766e;
+      --primary-hover: #0d9488;
+      --primary-strong: #115e59;
+      --primary-glow: rgba(15,118,110,0.15);
+      --accent: #0891b2;
+      --shadow: 0 20px 50px rgba(15,23,42,0.05);
+      --card-shadow: 0 4px 20px rgba(15,23,42,0.03);
+      --input-bg: #ffffff;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --code-inline-bg: #eef2f7;
+      --code-inline-text: #0f766e;
+      --danger: #dc2626;
+      --danger-bg: rgba(220,38,38,0.1);
+      --danger-glow: rgba(220,38,38,0.15);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0b0f19;
+      --bg-gradient: radial-gradient(circle at top left, rgba(20,184,166,0.12), transparent 45%), radial-gradient(circle at right 20%, rgba(14,165,233,0.08), transparent 42%), linear-gradient(180deg, #0b0f19 0%, #030712 100%);
+      --panel: rgba(17,24,39,0.7);
+      --panel-border: rgba(255,255,255,0.06);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --primary: #14b8a6;
+      --primary-hover: #2dd4bf;
+      --primary-strong: #99f6e4;
+      --primary-glow: rgba(20,184,166,0.25);
+      --accent: #38bdf8;
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --card-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      --input-bg: #1e293b;
+      --code-bg: #020617;
+      --code-text: #e2e8f0;
+      --code-inline-bg: #1e293b;
+      --code-inline-text: #5eead4;
+      --danger: #f87171;
+      --danger-bg: rgba(248,113,113,0.15);
+      --danger-glow: rgba(248,113,113,0.25);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { min-height: 100vh; font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; line-height: 1.6; }
+    .shell { width: min(1080px, calc(100vw - 32px)); margin: 0 auto; padding: 24px 0 48px; }
+
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand .logo { width: 26px; height: 26px; display: block; flex-shrink: 0; }
+    .eyebrow { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; font-family: "Outfit", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary-strong); background: var(--primary-glow); border: 1px solid var(--panel-border); }
+    .icon-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-border); background: var(--panel); cursor: pointer; color: var(--text); transition: background 0.2s, transform 0.2s; }
+    .icon-btn:hover { background: var(--input-bg); transform: translateY(-2px); }
+    .icon-btn svg { position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.25s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .icon-btn .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+    .icon-btn .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.4); }
+    :root[data-theme="light"] .icon-btn .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+    :root[data-theme="dark"] .icon-btn .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+    :root:not([data-theme]) .icon-btn .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+
+    .hero { display: grid; gap: 14px; padding: 36px 32px; border: 1px solid var(--panel-border); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(16px); position: relative; overflow: hidden; margin-bottom: 22px; }
+    .hero::before { content: ""; position: absolute; inset: -1px; border-radius: 24px; padding: 1px; background: linear-gradient(135deg, var(--primary-glow), transparent 40%, transparent 60%, rgba(14,165,233,0.15)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    h1 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: clamp(24px, 4vw, 36px); line-height: 1.15; letter-spacing: -0.03em; background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .lead { color: var(--text-muted); font-size: 15px; line-height: 1.7; max-width: 720px; }
+
+    .login-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); margin-bottom: 22px; }
+    .login-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .login-row input { flex: 1; min-width: 200px; padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .login-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border: 0; border-radius: 10px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 14px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 6px 18px var(--primary-glow); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-danger { background: linear-gradient(135deg, #dc2626, #f43f5e); box-shadow: 0 6px 18px var(--danger-glow); }
+    .btn-ghost { background: var(--input-bg); color: var(--text); border: 1px solid var(--panel-border); box-shadow: none; }
+    .btn-ghost:hover { background: var(--panel-border); filter: none; }
+
+    .error-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--danger-bg); color: var(--danger); font-size: 13px; display: none; }
+    .error-banner.show { display: block; }
+
+    .manage-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); display: none; }
+    .manage-card.show { display: block; }
+    .manage-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .manage-head h2 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+    .manage-head h2::before { content: ""; width: 4px; height: 18px; border-radius: 2px; background: linear-gradient(180deg, var(--primary), var(--accent)); }
+    .stat-line { font-size: 13px; color: var(--text-muted); font-family: "JetBrains Mono", monospace; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .item { border: 1px solid var(--panel-border); border-radius: 12px; overflow: hidden; background: var(--input-bg); transition: transform 0.2s, box-shadow 0.2s; }
+    .item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--primary-glow); }
+    .item .thumb { width: 100%; height: 120px; object-fit: cover; display: block; background: var(--panel-border); }
+    .item .meta { padding: 10px 12px; }
+    .item .name { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text); word-break: break-all; margin-bottom: 4px; }
+    .item .size { font-size: 11px; color: var(--text-faint); font-family: "JetBrains Mono", monospace; }
+    .item .actions { display: flex; gap: 6px; padding: 0 12px 12px; }
+    .item .actions button { flex: 1; padding: 7px 10px; border: 0; border-radius: 8px; font-family: "Outfit", sans-serif; font-weight: 600; font-size: 12px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
+    .item .actions button:hover { filter: brightness(1.08); }
+    .item .actions button.del { background: linear-gradient(135deg, #dc2626, #f43f5e); }
+    .item .actions button.copied { background: linear-gradient(135deg, #059669, #10b981); }
+
+    .empty { color: var(--text-faint); font-size: 14px; text-align: center; padding: 32px 0; }
+    .loading { color: var(--text-muted); font-size: 14px; text-align: center; padding: 32px 0; }
+
+    .footer { margin-top: 32px; padding: 22px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .hero, .login-card, .manage-card { background: var(--bg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    @media (max-width: 720px) {
+      .shell { padding: 16px 0 32px; }
+      .hero { padding: 26px 22px; border-radius: 20px; }
+      .login-card, .manage-card { padding: 20px; border-radius: 16px; }
+      .login-row { flex-direction: column; align-items: stretch; }
+      .login-row input { min-width: 0; }
+      .btn { width: 100%; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+      body { background-attachment: scroll; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#14b8a6" />
+              <stop offset="100%" stop-color="#0891b2" />
+            </linearGradient>
+          </defs>
+          <path fill="url(#logoGrad)" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+        </svg>
+        <span class="eyebrow">Image Admin</span>
+      </div>
+      <button id="themeToggle" class="icon-btn" aria-label="切换主题" title="单击切换日间夜间模式，双击恢复跟随系统">
+        <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>图床管理</h1>
+        <p class="lead">查看 Blob 存储中的全部图片，支持复制链接与删除单张。操作不可恢复，请谨慎处理。</p>
+      </section>
+
+      <section class="login-card">
+        <div class="login-row">
+          <input type="password" id="passwordInput" placeholder="请输入管理密码" autocomplete="current-password" />
+          <button class="btn" id="loginBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            <span>进入管理</span>
+          </button>
+        </div>
+        <div class="error-banner" id="errorBanner"></div>
+      </section>
+
+      <section class="manage-card" id="manageCard">
+        <div class="manage-head">
+          <h2>图片列表</h2>
+          <div class="stat-line" id="statLine"></div>
+        </div>
+        <div id="gridBox">
+          <div class="loading">加载中</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Powered by Tencent Cloud EdgeOne</p>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme");
+      const next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+
+    const passwordInput = document.getElementById("passwordInput");
+    const loginBtn = document.getElementById("loginBtn");
+    const errorBanner = document.getElementById("errorBanner");
+    const manageCard = document.getElementById("manageCard");
+    const gridBox = document.getElementById("gridBox");
+    const statLine = document.getElementById("statLine");
+
+    let currentPassword = "";
+    let fileList = [];
+
+    function showError(message) {
+      errorBanner.textContent = message;
+      errorBanner.classList.add("show");
+    }
+
+    function clearError() {
+      errorBanner.textContent = "";
+      errorBanner.classList.remove("show");
+    }
+
+    function formatSize(bytes) {
+      if (!bytes || bytes <= 0) return "未知";
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / 1024 / 1024).toFixed(2) + " MB";
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:-9999px;opacity:0;";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (_) { ok = false; }
+      document.body.removeChild(ta);
+      return ok ? Promise.resolve() : Promise.reject();
+    }
+
+    async function callAdmin(payload) {
+      const resp = await fetch("/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      return await resp.json();
+    }
+
+    async function loadFiles() {
+      gridBox.innerHTML = '<div class="loading">加载中</div>';
+      const data = await callAdmin({ password: currentPassword, action: "list" });
+
+      if (!data.success) {
+        showError(data.error || "加载失败");
+        gridBox.innerHTML = '<div class="empty">加载失败</div>';
+        return;
+      }
+
+      fileList = data.data.files || [];
+
+      if (fileList.length === 0) {
+        gridBox.innerHTML = '<div class="empty">暂无图片</div>';
+        statLine.textContent = "共 0 张";
+        return;
+      }
+
+      const totalSize = fileList.reduce((sum, f) => sum + (f.size || 0), 0);
+      statLine.textContent = "共 " + fileList.length + " 张 · " + formatSize(totalSize);
+
+      gridBox.innerHTML = '<div class="grid">' + fileList.map((f, index) => `
+        <div class="item">
+          <img class="thumb" src="/img/${f.name}" alt="${f.name}" loading="lazy" />
+          <div class="meta">
+            <div class="name">${f.name}</div>
+            <div class="size">${formatSize(f.size)}</div>
+          </div>
+          <div class="actions">
+            <button type="button" data-action="copy" data-index="${index}">复制</button>
+            <button type="button" class="del" data-action="delete" data-index="${index}">删除</button>
+          </div>
+        </div>
+      `).join("") + '</div>';
+
+      gridBox.querySelectorAll("button[data-action]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const index = parseInt(btn.dataset.index, 10);
+          const file = fileList[index];
+          if (!file) return;
+          if (btn.dataset.action === "copy") {
+            const url = location.origin + "/img/" + file.name;
+            copyText(url).then(() => {
+              btn.classList.add("copied");
+              btn.textContent = "已复制";
+              setTimeout(() => { btn.classList.remove("copied"); btn.textContent = "复制"; }, 1500);
+            });
+          } else if (btn.dataset.action === "delete") {
+            handleDelete(file, btn);
+          }
+        });
+      });
+    }
+
+    async function handleDelete(file, btn) {
+      if (!confirm("确定删除 " + file.name + " 吗？删除后不可恢复。")) return;
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "删除中";
+
+      const data = await callAdmin({ password: currentPassword, action: "delete", key: file.key });
+
+      if (data.success) {
+        await loadFiles();
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        showError(data.error || "删除失败");
+      }
+    }
+
+    loginBtn.addEventListener("click", async () => {
+      const password = passwordInput.value.trim();
+      if (!password) { showError("请输入密码"); return; }
+
+      clearError();
+      loginBtn.disabled = true;
+      loginBtn.querySelector("span").textContent = "验证中";
+
+      try {
+        const data = await callAdmin({ password, action: "list" });
+        if (data.success) {
+          currentPassword = password;
+          manageCard.classList.add("show");
+          fileList = data.data.files || [];
+          await loadFiles();
+          manageCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          showError(data.error || "密码错误");
+        }
+      } catch (e) {
+        showError("请求失败");
+      }
+
+      loginBtn.disabled = false;
+      loginBtn.querySelector("span").textContent = "进入管理";
+    });
+
+    passwordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loginBtn.click();
+    });
+  </script>
+</body>
+</html>
