@@ -31,6 +31,18 @@ function formatList(blobs) {
 export default async function onRequest(context) {
   const request = context.request;
 
+  if (request.method === "GET") {
+    return json({
+      success: true,
+      diagnose: {
+        route: "ok",
+        usernameConfigured: !!ADMIN_USERNAME,
+        passwordConfigured: !!ADMIN_PASSWORD,
+        usernameSource: ADMIN_USERNAME ? "env" : "missing"
+      }
+    });
+  }
+
   if (request.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
@@ -43,7 +55,7 @@ export default async function onRequest(context) {
   }
 
   if (request.method !== "POST") {
-    return json({ success: false, error: "仅支持 POST" }, 405);
+    return json({ success: false, error: "仅支持 POST 或 GET" }, 405);
   }
 
   let body;
