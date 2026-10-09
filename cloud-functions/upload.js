@@ -1,5 +1,20 @@
 import { getStore } from "@edgeone/pages-blob";
 
+// 用 Date.now() 算北京时间，不依赖任何 Date 方法
+function genBeijingName() {
+  const ts = Date.now();
+  // 加8小时偏移后当 UTC 解析，这样 getUTC* 返回的就是北京时间
+  const d = new Date(ts + 8 * 60 * 60 * 1000);
+  const y = String(d.getUTCFullYear()).slice(-2);
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const h = String(d.getUTCHours()).padStart(2, '0');
+  const min = String(d.getUTCMinutes()).padStart(2, '0');
+  const s = String(d.getUTCSeconds()).padStart(2, '0');
+  const ms = String(d.getUTCMilliseconds()).padStart(3, '0');
+  return `${y}${m}${day}${h}${min}${s}${ms}.webp`;
+}
+
 export default async function onRequest(context) {
   if (context.request.method !== "POST") {
     return new Response(JSON.stringify({ success: false, error: "仅支持 POST" }), {
@@ -22,15 +37,7 @@ export default async function onRequest(context) {
     });
   }
 
-  // 优先用前端传来的北京时间文件名
-  let filename = form.get("filename");
-  if (!filename || typeof filename !== "string") {
-    filename = String(Date.now()) + ".webp";
-  }
-  if (!filename.endsWith(".webp")) {
-    filename = filename.replace(/\.[^.]+$/, "") + ".webp";
-  }
-
+  const filename = genBeijingName();
   const key = `img/${filename}`;
   const buf = await file.arrayBuffer();
 
