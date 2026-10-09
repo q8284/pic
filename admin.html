@@ -278,17 +278,41 @@
     }
 
     async function callAdmin(payload) {
-      const resp = await fetch("/admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      return await resp.json();
+      let resp;
+      try {
+        resp = await fetch("/admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        throw new Error("无法连接 /admin 接口，请确认管理函数已部署");
+      }
+
+      const text = await resp.text();
+
+      if (!resp.ok) {
+        throw new Error("HTTP " + resp.status + "：" + text.slice(0, 160));
+      }
+
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        throw new Error("响应不是 JSON：" + text.slice(0, 160));
+      }
     }
 
     async function loadFiles() {
       gridBox.innerHTML = '<div class="loading">加载中</div>';
-      const data = await callAdmin(Object.assign(credential(), { action: "list" }));
+
+      let data;
+      try {
+        data = await callAdmin(Object.assign(credential(), { action: "list" }));
+      } catch (e) {
+        showError(e && e.message ? e.message : "加载失败");
+        gridBox.innerHTML = '<div class="empty">加载失败</div>';
+        return;
+      }
 
       if (!data.success) {
         showError(data.error || "加载失败");
@@ -380,7 +404,7 @@
           showError(data.error || "账号或密码错误");
         }
       } catch (e) {
-        showError("请求失败");
+        showError(e && e.message ? e.message : "请求失败");
       }
 
       loginBtn.disabled = false;
