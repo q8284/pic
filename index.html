@@ -97,8 +97,6 @@
     .row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; min-width: 60px; }
     .row input[type="range"] { flex: 1; accent-color: var(--primary); }
     .row span { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--primary); min-width: 40px; text-align: center; }
-    .row select { flex: 1; padding: 9px 12px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; cursor: pointer; }
-    .row select:focus { border-color: var(--primary); }
 
     .upload-btn { display: block; width: 100%; padding: 14px; margin-top: 16px; border: 0; border-radius: 12px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
     .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
@@ -183,16 +181,6 @@
           <input type="range" id="quality" min="0.3" max="0.95" step="0.05" value="0.8" />
           <span id="qualityVal">0.80</span>
         </div>
-        <div class="row">
-          <label>最大边长</label>
-          <select id="maxSide">
-            <option value="0">原始尺寸</option>
-            <option value="2560">2560 px</option>
-            <option value="1920" selected>1920 px</option>
-            <option value="1600">1600 px</option>
-            <option value="1280">1280 px</option>
-          </select>
-        </div>
         <div class="warn-banner" id="warnBanner"></div>
         <button class="upload-btn" id="uploadBtn" disabled>上传图片</button>
         <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
@@ -237,13 +225,13 @@
       webpCodecPending = import(CODEC_URL)
         .then(function (mod) {
           webpCodec = mod;
-          setCodecState("ready", "WebP 编码器已就绪");
+          setCodecState("ready", "编码器已就绪");
           return mod;
         })
         .catch(function (e) {
           webpCodecPending = null;
-          setCodecState("fail", "WebP 编码器加载失败");
-          throw new Error("WebP 编码器加载失败");
+          setCodecState("fail", "编码器加载失败");
+          throw new Error("编码器加载失败");
         });
       return webpCodecPending;
     }
@@ -265,13 +253,13 @@
     (async function initCodec() {
       const native = await canEncodeNatively();
       if (native) {
-        setCodecState("ready", "浏览器原生 WebP 编码");
+        setCodecState("ready", "浏览器原生编码器");
       } else {
-        setCodecState("", "正在加载 WebP 编码器");
+        setCodecState("", "正在加载编码器");
         try {
           await loadWebpCodec();
         } catch (e) {
-          setCodecState("fail", "WebP 编码器不可用");
+          setCodecState("fail", "编码器不可用");
         }
       }
     })();
@@ -285,7 +273,6 @@
 
     const qualitySlider = document.getElementById("quality");
     const qualityVal = document.getElementById("qualityVal");
-    const maxSideSelect = document.getElementById("maxSide");
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const uploadBtn = document.getElementById("uploadBtn");
@@ -321,17 +308,12 @@
       uploadBtn.disabled = false;
     }
 
-    function drawToCanvas(file, maxSide) {
+    function drawToCanvas(file) {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
-          let w = img.naturalWidth || img.width;
-          let h = img.naturalHeight || img.height;
-          if (maxSide > 0 && Math.max(w, h) > maxSide) {
-            const ratio = maxSide / Math.max(w, h);
-            w = Math.round(w * ratio);
-            h = Math.round(h * ratio);
-          }
+          const w = img.naturalWidth || img.width;
+          const h = img.naturalHeight || img.height;
           const canvas = document.createElement("canvas");
           canvas.width = w;
           canvas.height = h;
@@ -375,13 +357,12 @@
       warnBanner.className = "warn-banner";
 
       const quality = parseFloat(qualitySlider.value);
-      const maxSide = parseInt(maxSideSelect.value, 10) || 0;
       const uploadedResults = [];
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         try {
-          const canvas = await drawToCanvas(file, maxSide);
+          const canvas = await drawToCanvas(file);
           const webpBlob = await encodeWebp(canvas, quality);
           progressFill.style.width = ((i + 0.5) / selectedFiles.length) * 100 + "%";
 
