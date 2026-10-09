@@ -4,14 +4,16 @@ function pad(n) { return String(n).padStart(2, "0"); }
 
 function genName() {
   const d = new Date();
-  const yymmddhhmm =
-    String(d.getFullYear()).slice(-2) +
-    pad(d.getMonth() + 1) +
-    pad(d.getDate()) +
-    pad(d.getHours()) +
-    pad(d.getMinutes());
-  const ss = pad(d.getSeconds());
-  const ms = String(d.getMilliseconds()).padStart(3, "0");
+  // UTC+8 转北京时间
+  let h = d.getUTCHours() + 8;
+  let day = d.getUTCDate();
+  let month = d.getUTCMonth() + 1;
+  let year = d.getUTCFullYear();
+  if (h >= 24) { h -= 24; day += 1; }
+
+  const yymmddhhmm = String(year).slice(-2) + pad(month) + pad(day) + pad(h) + pad(d.getUTCMinutes());
+  const ss = pad(d.getUTCSeconds());
+  const ms = String(d.getUTCMilliseconds()).padStart(3, "0");
   return `${yymmddhhmm}${ss}${ms}`;
 }
 
@@ -53,15 +55,16 @@ export default async function onRequest(context) {
     });
   }
 
-  const url = `/img/${filename}`;
+  // 从请求头拼完整 URL
+  const host = context.request.headers.get("host") || "";
+  const proto = context.request.headers.get("x-forwarded-proto") || "https";
+  const fullUrl = `https://${host}/img/${filename}`;
+
   return new Response(JSON.stringify({
     success: true,
     data: {
       filename,
-      url,
-      markdown: `![image](${url})`,
-      html: `<img src="${url}" />`,
-      size: file.size
+      url: fullUrl
     }
   }), { headers: { "Content-Type": "application/json" } });
 }
