@@ -2,8 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>图床管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)" />
@@ -67,7 +66,8 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { min-height: 100vh; font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; line-height: 1.6; }
+    body { min-height: 100vh; font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; line-height: 1.6; touch-action: manipulation; }
+    button, .item, .thumb-wrap, .check-label, .link-btn { touch-action: manipulation; }
     .shell { width: min(1240px, calc(100vw - 32px)); margin: 0 auto; padding: 20px 0 48px; }
     .hidden { display: none !important; }
 
@@ -95,7 +95,6 @@
     .btn-ghost { background: var(--input-bg); color: var(--text); border: 1px solid var(--panel-border); box-shadow: none; font-weight: 600; }
     .btn-ghost:hover { background: var(--hover-bg); filter: none; }
 
-    .hero { display: grid; gap: 12px; padding: 36px 32px; border: 1px solid var(--panel-border); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(16px); margin-bottom: 22px; }
     h1 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: clamp(24px, 4vw, 36px); line-height: 1.15; letter-spacing: -0.03em; background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .lead { color: var(--text-muted); font-size: 15px; line-height: 1.7; max-width: 720px; }
 
@@ -171,7 +170,7 @@
     .footer { margin-top: 28px; text-align: center; color: var(--text-faint); font-size: 12.5px; }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .hero, .login-card, .toolbar, .grid-panel { background: var(--bg); }
+      .login-card, .toolbar, .grid-panel { background: var(--bg); }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -186,7 +185,6 @@
     @media (max-width: 720px) {
       .shell { padding: 14px 0 32px; }
       .header { gap: 10px; }
-      .hero { padding: 26px 22px; border-radius: 20px; }
       .login-card { padding: 26px 22px; }
       .toolbar { padding: 14px; gap: 10px; }
       .search-box { min-width: 100%; }
@@ -240,11 +238,6 @@
     </header>
 
     <main>
-      <section class="hero" id="hero">
-        <h1>图床管理</h1>
-        <p class="lead">查看 Blob 存储中的全部图片，支持搜索、复制直链与批量删除。删除操作不可恢复，请谨慎处理。</p>
-      </section>
-
       <div class="login-wrap" id="loginWrap">
         <section class="login-card">
           <div class="login-icon">
@@ -313,7 +306,6 @@
       localStorage.setItem("theme", next);
     });
 
-    const hero = document.getElementById("hero");
     const loginWrap = document.getElementById("loginWrap");
     const usernameInput = document.getElementById("usernameInput");
     const passwordInput = document.getElementById("passwordInput");
@@ -733,18 +725,15 @@
       currentPassword = password;
       saveSession();
       clearError();
-      hero.classList.add("hidden");
       loginWrap.classList.add("hidden");
       manageCard.classList.remove("hidden");
       logoutBtn.classList.remove("hidden");
-      document.title = "图床管理";
     }
 
     function enterLoggedOut() {
       currentUsername = "";
       currentPassword = "";
       sessionStorage.removeItem(SESSION_KEY);
-      hero.classList.remove("hidden");
       loginWrap.classList.remove("hidden");
       manageCard.classList.add("hidden");
       logoutBtn.classList.add("hidden");
@@ -756,7 +745,6 @@
       keyword = "";
       searchInput.value = "";
       passwordInput.value = "";
-      document.title = "图床管理";
     }
 
     loginBtn.addEventListener("click", async () => {
