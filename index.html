@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>免费图床</title>
   <meta name="description" content="基于腾讯云 EdgeOne 的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。" />
   <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
@@ -61,7 +61,8 @@
       --ok: #34d399;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { min-height: 100vh; font-family: "Inter", system-ui, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; transition: background 0.3s, color 0.3s; line-height: 1.6; }
+    body { min-height: 100vh; font-family: "Inter", system-ui, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; transition: background 0.3s, color 0.3s; line-height: 1.6; touch-action: manipulation; }
+    button, .drop-zone, .history-item, .copy-btn, .upload-btn { touch-action: manipulation; }
     .shell { width: min(1080px, calc(100vw - 32px)); margin: 0 auto; padding: 24px 0 48px; }
 
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
