@@ -225,19 +225,6 @@
       uploadBtn.disabled = false;
     }
 
-    // 生成北京时间文件名（浏览器本地时间）
-    function genBeijingName() {
-      const d = new Date();
-      const y = String(d.getFullYear()).slice(-2);
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const h = String(d.getHours()).padStart(2, '0');
-      const min = String(d.getMinutes()).padStart(2, '0');
-      const s = String(d.getSeconds()).padStart(2, '0');
-      const ms = String(d.getMilliseconds()).padStart(3, '0');
-      return `${y}${m}${day}${h}${min}${s}${ms}.webp`;
-    }
-
     uploadBtn.addEventListener('click', async () => {
       if (selectedFiles.length === 0) return;
       uploadBtn.disabled = true;
@@ -257,11 +244,8 @@
           const webpBlob = await convertToWebP(file, quality);
           progressFill.style.width = `${((i + 0.5) / selectedFiles.length) * 100}%`;
 
-          const clientFilename = genBeijingName();
-
           const formData = new FormData();
           formData.append('file', webpBlob, file.name.replace(/\.[^.]+$/, '.webp'));
-          formData.append('filename', clientFilename);
 
           const resp = await fetch('/upload', { method: 'POST', body: formData });
           const data = await resp.json();
