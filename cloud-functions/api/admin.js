@@ -35,6 +35,51 @@ function formatList(blobs) {
     .sort((a, b) => a.name < b.name ? 1 : a.name > b.name ? -1 : 0);
 }
 
+async function mapLimit(list, limit, task) {
+  const results = new Array(list.length);
+  let cursor = 0;
+  async function run() {
+    while (cursor < list.length) {
+      const index = cursor;
+      cursor += 1;
+      results[index] = await task(list[index]);
+    }
+  }
+  const workers = [];
+  const count = Math.min(limit, list.length);
+  for (let i = 0; i < count; i += 1) workers.push(run());
+  await Promise.all(workers);
+  return results;
+}
+
+async function resolveSize(store, key) {
+  try {
+    const metaAb = await store.get("meta/" + key, { type: "arrayBuffer", consistency: "strong" });
+    if (metaAb && metaAb.byteLength) {
+      const parsed = JSON.parse(new TextDecoder().decode(metaAb));
+      if (parsed && typeof parsed.size === "number" && parsed.size > 0) {
+        return parsed.size;
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const ab = await store.get(key, { type: "arrayBuffer", consistency: "strong" });
+    if (ab && ab.byteLength) {
+      const size = ab.byteLength;
+      try {
+        await store.set("meta/" + key, JSON.stringify({ size: size, uploadedAt: null }), {
+          contentType: "application/json",
+          consistency: "strong"
+        });
+      } catch (e) {}
+      return size;
+    }
+  } catch (e) {}
+
+  return 0;
+}
+
 export default async function onRequest(context) {
   const request = context.request;
   const usernameEnv = readEnv(context, "ADMIN_USERNAME");
@@ -93,6 +138,14 @@ export default async function onRequest(context) {
     if (body.action === "list") {
       const result = await store.list({ prefix: "img/", consistency: "strong" });
       const files = formatList((result && result.blobs) || []);
+
+      await mapLimit(files, 5, async (file) => {
+        if (!file.size) {
+          file.size = await resolveSize(store, file.key);
+        }
+        return file;
+      });
+
       return json({ success: true, data: { files } });
     }
 
@@ -102,6 +155,9 @@ export default async function onRequest(context) {
         return json({ success: false, error: "非法路径" }, 400);
       }
       await store.delete(key);
+      try {
+        await store.delete("meta/" + key);
+      } catch (e) {}
       return json({ success: true });
     }
 
