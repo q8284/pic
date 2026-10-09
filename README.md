@@ -2,7 +2,7 @@
 
 基于腾讯云 EdgeOne Pages 构建的图床服务。上传图片自动转换为 WebP 格式，返回可直接访问的完整直链，支持拖拽上传。
 
-在线地址：https://api.qjww.cn
+演示地址：https://api.qjww.cn
 
 ## 特性
 
@@ -32,21 +32,8 @@
 
 ## 管理后台
 
-访问 `https://api.qjww.cn/admin.html` 输入密码进入，可查看 Blob 中的全部图片，支持复制直链与删除单张。
+访问 `https://你的域名/admin.html` ，可查看 Blob 中的全部图片，支持复制直链与删除单张。
 
-### 接口
-
-```
-POST https://api.qjww.cn/admin
-```
-
-请求体为 JSON，字段如下：
-
-| 字段 | 说明 |
-|------|------|
-| `password` | 管理密码 |
-| `action` | `list` 列出图片，`delete` 删除图片 |
-| `key` | 删除时必填，值为 `img/文件名.webp` |
 
 ### 密码配置
 
@@ -56,41 +43,12 @@ POST https://api.qjww.cn/admin
 
 | 变量名 | 值 |
 |--------|-----|
+| `ADMIN_USERNAME` | 你的管理账号 |
 | `ADMIN_PASSWORD` | 你的管理密码 |
 
 保存后重新部署即可生效。未配置该变量时，管理接口会返回「服务端未配置 ADMIN_PASSWORD 环境变量」，无法登录。
 
 密码不写入代码，因此仓库即使公开也不会泄露管理密码。
-
-## API 接口
-
-### 上传图片
-
-```
-POST https://api.qjww.cn/upload
-```
-
-表单字段：`file`，值为转换后的 WebP 文件。
-
-返回示例：
-
-```json
-{
-  "success": true,
-  "data": {
-    "filename": "261009155901511.webp",
-    "url": "https://api.qjww.cn/img/261009155901511.webp"
-  }
-}
-```
-
-### 读取图片
-
-```
-GET https://api.qjww.cn/img/:file
-```
-
-直接返回 WebP 二进制，响应头 `Content-Type: image/webp`，带一年缓存。
 
 ## 文件命名规则
 
