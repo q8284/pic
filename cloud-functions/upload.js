@@ -1,9 +1,10 @@
 import { getStore } from "@edgeone/pages-blob";
 
-// 用 Date.now() 算北京时间，不依赖任何 Date 方法
+// ★ 硬编码你的真实域名，不要读 host 头
+const DOMAIN = "https://api.qjww.cn";
+
 function genBeijingName() {
   const ts = Date.now();
-  // 加8小时偏移后当 UTC 解析，这样 getUTC* 返回的就是北京时间
   const d = new Date(ts + 8 * 60 * 60 * 1000);
   const y = String(d.getUTCFullYear()).slice(-2);
   const m = String(d.getUTCMonth() + 1).padStart(2, '0');
@@ -53,9 +54,8 @@ export default async function onRequest(context) {
     });
   }
 
-  const host = context.request.headers.get("host") || "";
-  const proto = context.request.headers.get("x-forwarded-proto") || "https";
-  const fullUrl = `https://${host}/img/${filename}`;
+  // ★ 用固定域名拼完整 URL
+  const fullUrl = `${DOMAIN}/img/${filename}`;
 
   return new Response(JSON.stringify({
     success: true,
