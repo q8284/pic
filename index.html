@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>免费图床</title>
-  <meta name="description" content="基于腾讯云 EdgeOne 边缘网络的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。" />
+  <meta name="description" content="基于腾讯云 EdgeOne 的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。" />
   <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,7 +28,6 @@
       --text-muted: #475569;
       --text-faint: #64748b;
       --primary: #0f766e;
-      --primary-hover: #0d9488;
       --primary-strong: #115e59;
       --primary-glow: rgba(15,118,110,0.15);
       --accent: #0891b2;
@@ -50,7 +49,6 @@
       --text-muted: #94a3b8;
       --text-faint: #64748b;
       --primary: #14b8a6;
-      --primary-hover: #2dd4bf;
       --primary-strong: #99f6e4;
       --primary-glow: rgba(20,184,166,0.25);
       --accent: #38bdf8;
@@ -82,6 +80,11 @@
     h1 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: clamp(26px, 4vw, 42px); background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
     .lead { color: var(--text-muted); font-size: 15px; }
 
+    .codec-tag { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-family: "JetBrains Mono", monospace; background: var(--panel-border); color: var(--text-muted); }
+    .codec-tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); display: block; }
+    .codec-tag.ready i { background: var(--ok); }
+    .codec-tag.fail i { background: var(--warn-text); }
+
     .upload-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); margin-bottom: 22px; }
     .drop-zone { border: 2px dashed var(--primary); border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
     .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--primary-glow); }
@@ -90,15 +93,12 @@
     .drop-zone .hint { font-size: 12px; color: var(--text-faint); margin-top: 8px; }
     #fileInput { display: none; }
 
-    .quality-row { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
-    .quality-row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
-    .quality-row input[type="range"] { flex: 1; accent-color: var(--primary); }
-    .quality-row span { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--primary); min-width: 40px; text-align: center; }
-
-    .size-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
-    .size-row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
-    .size-row select { flex: 1; padding: 9px 12px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; cursor: pointer; }
-    .size-row select:focus { border-color: var(--primary); }
+    .row { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+    .row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; min-width: 60px; }
+    .row input[type="range"] { flex: 1; accent-color: var(--primary); }
+    .row span { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--primary); min-width: 40px; text-align: center; }
+    .row select { flex: 1; padding: 9px 12px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; cursor: pointer; }
+    .row select:focus { border-color: var(--primary); }
 
     .upload-btn { display: block; width: 100%; padding: 14px; margin-top: 16px; border: 0; border-radius: 12px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
     .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
@@ -167,7 +167,8 @@
     <main>
       <section class="hero">
         <h1>免费图床</h1>
-        <p class="lead">基于腾讯云 EdgeOne 边缘网络的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。</p>
+        <p class="lead">基于腾讯云 EdgeOne 的免费图床。上传图片自动转换为 WebP 格式，秒级返回直链，支持拖拽上传。</p>
+        <div class="codec-tag" id="codecTag"><i></i><span id="codecText">检测编码器中</span></div>
       </section>
 
       <section class="upload-card">
@@ -177,12 +178,12 @@
           <p class="hint">支持 JPG / PNG / GIF / WebP · 自动转换为 WebP · 原图最大 10MB</p>
           <input type="file" id="fileInput" accept="image/*" multiple />
         </div>
-        <div class="quality-row">
+        <div class="row">
           <label>WebP 质量</label>
           <input type="range" id="quality" min="0.3" max="0.95" step="0.05" value="0.8" />
           <span id="qualityVal">0.80</span>
         </div>
-        <div class="size-row">
+        <div class="row">
           <label>最大边长</label>
           <select id="maxSide">
             <option value="0">原始尺寸</option>
@@ -218,8 +219,62 @@
   </div>
 
   <script>
-    const MAX_SIDE_FALLBACK = 1920;
     const MAX_ORIGINAL_SIZE = 10 * 1024 * 1024;
+    const CODEC_URL = "https://unpkg.com/@jsquash/webp@1.5.0/index.js?module";
+
+    let webpCodec = null;
+    let webpCodecPending = null;
+
+    function setCodecState(state, text) {
+      const tag = document.getElementById("codecTag");
+      tag.className = "codec-tag" + (state ? " " + state : "");
+      document.getElementById("codecText").textContent = text;
+    }
+
+    function loadWebpCodec() {
+      if (webpCodec) return Promise.resolve(webpCodec);
+      if (webpCodecPending) return webpCodecPending;
+      webpCodecPending = import(CODEC_URL)
+        .then(function (mod) {
+          webpCodec = mod;
+          setCodecState("ready", "WebP 编码器已就绪");
+          return mod;
+        })
+        .catch(function (e) {
+          webpCodecPending = null;
+          setCodecState("fail", "WebP 编码器加载失败");
+          throw new Error("WebP 编码器加载失败");
+        });
+      return webpCodecPending;
+    }
+
+    function canEncodeNatively() {
+      const c = document.createElement("canvas");
+      c.width = 2;
+      c.height = 2;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "rgba(0,128,255,0.5)";
+      ctx.fillRect(0, 0, 2, 2);
+      return new Promise(function (resolve) {
+        c.toBlob(function (blob) {
+          resolve(!!blob && blob.type === "image/webp");
+        }, "image/webp", 0.8);
+      });
+    }
+
+    (async function initCodec() {
+      const native = await canEncodeNatively();
+      if (native) {
+        setCodecState("ready", "浏览器原生 WebP 编码");
+      } else {
+        setCodecState("", "正在加载 WebP 编码器");
+        try {
+          await loadWebpCodec();
+        } catch (e) {
+          setCodecState("fail", "WebP 编码器不可用");
+        }
+      }
+    })();
 
     document.getElementById("themeToggle").addEventListener("click", () => {
       const cur = document.documentElement.getAttribute("data-theme");
@@ -266,7 +321,7 @@
       uploadBtn.disabled = false;
     }
 
-    function convertToWebP(file, quality, maxSide) {
+    function drawToCanvas(file, maxSide) {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
@@ -282,18 +337,24 @@
           canvas.height = h;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, w, h);
-          canvas.toBlob(blob => {
-            if (!blob) { reject(new Error("转换失败")); return; }
-            if (blob.type !== "image/webp") {
-              reject(new Error("当前浏览器不支持 WebP 编码"));
-              return;
-            }
-            resolve(blob);
-          }, "image/webp", quality);
+          resolve(canvas);
         };
         img.onerror = () => reject(new Error("图片解析失败"));
         img.src = URL.createObjectURL(file);
       });
+    }
+
+    async function encodeWebp(canvas, quality) {
+      const native = await new Promise((resolve) => {
+        canvas.toBlob(resolve, "image/webp", quality);
+      });
+      if (native && native.type === "image/webp") return native;
+
+      const codec = await loadWebpCodec();
+      const ctx = canvas.getContext("2d");
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const buffer = await codec.encode(imageData, { quality: Math.round(quality * 100) });
+      return new Blob([buffer], { type: "image/webp" });
     }
 
     function formatSize(bytes) {
@@ -320,7 +381,8 @@
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         try {
-          const webpBlob = await convertToWebP(file, quality, maxSide);
+          const canvas = await drawToCanvas(file, maxSide);
+          const webpBlob = await encodeWebp(canvas, quality);
           progressFill.style.width = ((i + 0.5) / selectedFiles.length) * 100 + "%";
 
           const formData = new FormData();
@@ -332,7 +394,6 @@
           if (data.success) {
             uploadedResults.push({
               url: data.data.url,
-              filename: data.data.filename,
               originalSize: file.size,
               webpSize: webpBlob.size
             });
