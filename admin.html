@@ -621,8 +621,28 @@
       syncSelectionUI();
     }
 
-    async function loadFiles() {
+    // ===== 唯一改动：loadFiles 加了 60 秒缓存 =====
+    async function loadFiles(forceRefresh) {
       if (loading) return;
+
+      // 60秒缓存：命中则直接用，不发请求
+      if (!forceRefresh) {
+        const CACHE_KEY = 'admin_file_list_cache';
+        const CACHE_TIME_KEY = 'admin_file_list_time';
+        const CACHE_TTL = 60 * 1000;
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        const cachedTime = sessionStorage.getItem(CACHE_TIME_KEY);
+        if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < CACHE_TTL) {
+          try {
+            const cachedData = JSON.parse(cached);
+            fileList = cachedData;
+            loading = false;
+            renderGrid();
+            return;
+          } catch (e) { /* 缓存损坏，继续走网络请求 */ }
+        }
+      }
+
       loading = true;
       renderSkeleton();
 
@@ -646,6 +666,13 @@
       }
 
       fileList = data.data.files || [];
+
+      // 请求成功后写入缓存
+      try {
+        sessionStorage.setItem('admin_file_list_cache', JSON.stringify(fileList));
+        sessionStorage.setItem('admin_file_list_time', Date.now().toString());
+      } catch (e) { /* 写入失败不影响正常功能 */ }
+
       renderGrid();
     }
 
@@ -667,7 +694,7 @@
 
       if (data.success) {
         selected.delete(file.key);
-        await loadFiles();
+        await loadFiles(true);
       } else {
         btn.disabled = false;
         btn.textContent = original;
@@ -698,7 +725,7 @@
       label.textContent = original;
       batchDeleteBtn.disabled = false;
       if (fail > 0) showError("有 " + fail + " 张删除失败，请重试");
-      await loadFiles();
+      await loadFiles(true);
     }
 
     function enterLoggedIn(username, password) {
@@ -749,6 +776,11 @@
           fileList = data.data.files || [];
           currentPage = 1;
           renderGrid();
+          // 写入缓存
+          try {
+            sessionStorage.setItem('admin_file_list_cache', JSON.stringify(fileList));
+            sessionStorage.setItem('admin_file_list_time', Date.now().toString());
+          } catch (e) {}
         } else {
           showError(data.error || "账号或密码错误");
         }
@@ -795,7 +827,7 @@
       if (session && session.username && session.password) {
         enterLoggedIn(session.username, session.password);
         usernameInput.value = session.username;
-        loadFiles();
+        loadFiles(true);
       }
     })();
   </script>
