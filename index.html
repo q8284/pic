@@ -36,7 +36,9 @@
       --card-shadow: 0 4px 20px rgba(15,23,42,0.03);
       --input-bg: #ffffff;
       --code-bg: #0f172a;
-      --code-text: #e2e8f0;
+      --warn-bg: rgba(245,158,11,0.1);
+      --warn-text: #d97706;
+      --ok: #059669;
     }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -56,7 +58,9 @@
       --card-shadow: 0 4px 20px rgba(0,0,0,0.25);
       --input-bg: #1e293b;
       --code-bg: #020617;
-      --code-text: #e2e8f0;
+      --warn-bg: rgba(245,158,11,0.15);
+      --warn-text: #fbbf24;
+      --ok: #34d399;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { min-height: 100vh; font-family: "Inter", system-ui, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; transition: background 0.3s, color 0.3s; line-height: 1.6; }
@@ -65,8 +69,8 @@
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .brand { display: flex; align-items: center; gap: 8px; }
     .eyebrow { display: inline-flex; padding: 6px 12px; border-radius: 999px; font-family: "Outfit", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary-strong); background: var(--primary-glow); border: 1px solid var(--panel-border); }
-    .icon-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-border); background: var(--panel); cursor: pointer; color: var(--text); transition: all 0.2s; }
-    .icon-btn:hover { transform: translateY(-2px); }
+    .icon-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-border); background: var(--panel); cursor: pointer; color: var(--text); transition: background 0.2s, transform 0.2s; flex-shrink: 0; }
+    .icon-btn:hover { background: var(--input-bg); transform: translateY(-2px); }
     .icon-btn svg { position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.25s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .icon-btn .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
     .icon-btn .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.4); }
@@ -91,6 +95,11 @@
     .quality-row input[type="range"] { flex: 1; accent-color: var(--primary); }
     .quality-row span { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--primary); min-width: 40px; text-align: center; }
 
+    .size-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+    .size-row label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+    .size-row select { flex: 1; padding: 9px 12px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; cursor: pointer; }
+    .size-row select:focus { border-color: var(--primary); }
+
     .upload-btn { display: block; width: 100%; padding: 14px; margin-top: 16px; border: 0; border-radius: 12px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
     .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
     .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -99,15 +108,16 @@
     .progress-bar.show { display: block; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.3s; }
 
-    .warn-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(245,158,11,0.1); color: #d97706; font-size: 12px; display: none; }
+    .warn-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--warn-bg); color: var(--warn-text); font-size: 12px; display: none; }
     .warn-banner.show { display: block; }
 
     .result-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); margin-bottom: 22px; display: none; }
     .result-card.show { display: block; }
     .result-card h3 { font-family: "Outfit", sans-serif; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .result-card h3 .ok { color: #059669; }
-    .preview-img { max-width: 100%; max-height: 300px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 16px; display: block; }
-    .field-label { font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .result-card h3 .ok { color: var(--ok); }
+    .preview-img { max-width: 100%; max-height: 300px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 12px; display: block; }
+    .compress-info { font-size: 12.5px; color: var(--text-muted); font-family: "JetBrains Mono", monospace; margin-bottom: 14px; }
+    .compress-info b { color: var(--ok); font-weight: 600; }
     .url-row { display: flex; gap: 8px; align-items: center; }
     .url-row code { flex: 1; font-family: "JetBrains Mono", monospace; font-size: 12px; background: var(--code-bg); color: #7ee787; padding: 10px 14px; border-radius: 8px; overflow-x: auto; white-space: nowrap; }
     .copy-btn { flex-shrink: 0; padding: 10px 18px; border-radius: 8px; border: 0; font-family: "Outfit", sans-serif; font-weight: 600; font-size: 13px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
@@ -133,14 +143,11 @@
   <div class="shell">
     <header class="header">
       <div class="brand">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z" />
-          <path d="M8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-        </svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/><path d="M8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
         <span class="eyebrow">Free Image Bed</span>
       </div>
       <button class="icon-btn" id="themeToggle" aria-label="切换主题" title="单击切换日间夜间模式，双击恢复跟随系统">
-        <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="sun-icon" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5" />
           <line x1="12" y1="1" x2="12" y2="3" />
           <line x1="12" y1="21" x2="12" y2="23" />
@@ -151,7 +158,7 @@
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
-        <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="moon-icon" viewBox="0 0 24 24">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
       </button>
@@ -165,9 +172,7 @@
 
       <section class="upload-card">
         <div class="drop-zone" id="dropZone">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
-            <path d="M14 13V17H10V13H7L12 8L17 13H14M19.35 10.03C18.67 6.59 15.64 4 12 4C9.11 4 6.6 5.64 5.35 8.03C2.34 8.36 0 10.9 0 14A6 6 0 0 0 6 20H19A5 5 0 0 0 24 15C24 12.36 21.95 10.22 19.35 10.03Z" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M14 13V17H10V13H7L12 8L17 13H14M19.35 10.03C18.67 6.59 15.64 4 12 4C9.11 4 6.6 5.64 5.35 8.03C2.34 8.36 0 10.9 0 14A6 6 0 0 0 6 20H19A5 5 0 0 0 24 15C24 12.36 21.95 10.22 19.35 10.03Z"/></svg>
           <p>拖拽图片到此处，或点击选择</p>
           <p class="hint">支持 JPG / PNG / GIF / WebP · 自动转换为 WebP · 原图最大 10MB</p>
           <input type="file" id="fileInput" accept="image/*" multiple />
@@ -177,18 +182,26 @@
           <input type="range" id="quality" min="0.3" max="0.95" step="0.05" value="0.8" />
           <span id="qualityVal">0.80</span>
         </div>
+        <div class="size-row">
+          <label>最大边长</label>
+          <select id="maxSide">
+            <option value="0">原始尺寸</option>
+            <option value="2560">2560 px</option>
+            <option value="1920" selected>1920 px</option>
+            <option value="1600">1600 px</option>
+            <option value="1280">1280 px</option>
+          </select>
+        </div>
         <div class="warn-banner" id="warnBanner"></div>
         <button class="upload-btn" id="uploadBtn" disabled>上传图片</button>
         <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
       </section>
 
       <section class="result-card" id="resultCard">
-        <h3><span class="ok">上传成功</span></h3>
+        <h3><span class="ok">✓</span> 上传成功</h3>
         <img class="preview-img" id="resultImg" />
-        <div style="margin-bottom:12px;">
-          <div class="field-label">图片直链</div>
-          <div class="url-row"><code id="resultUrl"></code><button class="copy-btn" id="copyUrlBtn">复制</button></div>
-        </div>
+        <div class="compress-info" id="compressInfo"></div>
+        <div class="url-row"><code id="resultUrl"></code><button class="copy-btn" id="copyUrlBtn">复制</button></div>
       </section>
 
       <section class="history-card">
@@ -205,46 +218,28 @@
   </div>
 
   <script>
-    const themeToggle = document.getElementById("themeToggle");
-    const prefersDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const MAX_SIDE_FALLBACK = 1920;
+    const MAX_ORIGINAL_SIZE = 10 * 1024 * 1024;
 
-    function applyTheme(theme) {
-      document.documentElement.setAttribute("data-theme", theme);
-    }
-
-    function systemTheme() {
-      return prefersDarkQuery.matches ? "dark" : "light";
-    }
-
-    themeToggle.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "light";
-      const next = current === "dark" ? "light" : "dark";
-      applyTheme(next);
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme");
+      const next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });
 
-    themeToggle.addEventListener("dblclick", (e) => {
-      e.preventDefault();
-      localStorage.removeItem("theme");
-      applyTheme(systemTheme());
-    });
-
-    const onSystemThemeChange = (e) => {
-      if (!localStorage.getItem("theme")) applyTheme(e.matches ? "dark" : "light");
-    };
-    if (prefersDarkQuery.addEventListener) prefersDarkQuery.addEventListener("change", onSystemThemeChange);
-    else if (prefersDarkQuery.addListener) prefersDarkQuery.addListener(onSystemThemeChange);
-
     const qualitySlider = document.getElementById("quality");
     const qualityVal = document.getElementById("qualityVal");
-    qualitySlider.addEventListener("input", () => { qualityVal.textContent = parseFloat(qualitySlider.value).toFixed(2); });
-
+    const maxSideSelect = document.getElementById("maxSide");
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const uploadBtn = document.getElementById("uploadBtn");
     const warnBanner = document.getElementById("warnBanner");
-    const MAX_ORIGINAL_SIZE = 10 * 1024 * 1024;
     let selectedFiles = [];
+
+    qualitySlider.addEventListener("input", () => {
+      qualityVal.textContent = parseFloat(qualitySlider.value).toFixed(2);
+    });
 
     dropZone.addEventListener("click", () => fileInput.click());
     dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
@@ -271,6 +266,43 @@
       uploadBtn.disabled = false;
     }
 
+    function convertToWebP(file, quality, maxSide) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.naturalWidth || img.width;
+          let h = img.naturalHeight || img.height;
+          if (maxSide > 0 && Math.max(w, h) > maxSide) {
+            const ratio = maxSide / Math.max(w, h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(blob => {
+            if (!blob) { reject(new Error("转换失败")); return; }
+            if (blob.type !== "image/webp") {
+              reject(new Error("当前浏览器不支持 WebP 编码"));
+              return;
+            }
+            resolve(blob);
+          }, "image/webp", quality);
+        };
+        img.onerror = () => reject(new Error("图片解析失败"));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    function formatSize(bytes) {
+      if (!bytes || bytes <= 0) return "—";
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / 1024 / 1024).toFixed(2) + " MB";
+    }
+
     uploadBtn.addEventListener("click", async () => {
       if (selectedFiles.length === 0) return;
       uploadBtn.disabled = true;
@@ -282,12 +314,13 @@
       warnBanner.className = "warn-banner";
 
       const quality = parseFloat(qualitySlider.value);
+      const maxSide = parseInt(maxSideSelect.value, 10) || 0;
       const uploadedResults = [];
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         try {
-          const webpBlob = await convertToWebP(file, quality);
+          const webpBlob = await convertToWebP(file, quality, maxSide);
           progressFill.style.width = ((i + 0.5) / selectedFiles.length) * 100 + "%";
 
           const formData = new FormData();
@@ -297,14 +330,18 @@
           const data = await resp.json();
 
           if (data.success) {
-            uploadedResults.push(data.data);
+            uploadedResults.push({
+              url: data.data.url,
+              filename: data.data.filename,
+              originalSize: file.size,
+              webpSize: webpBlob.size
+            });
             saveToHistory(data.data);
           } else {
             alert(file.name + " 上传失败: " + data.error);
           }
         } catch (e) {
-          console.error(e);
-          alert(file.name + " 处理失败");
+          alert(file.name + " " + (e && e.message ? e.message : "处理失败"));
         }
         progressFill.style.width = ((i + 1) / selectedFiles.length) * 100 + "%";
       }
@@ -320,29 +357,18 @@
       dropZone.querySelector("p").textContent = "拖拽图片到此处，或点击选择";
     });
 
-    function convertToWebP(file, quality) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-          canvas.toBlob(blob => {
-            if (blob) resolve(blob);
-            else reject(new Error("WebP conversion failed"));
-          }, "image/webp", quality);
-        };
-        img.onerror = reject;
-        img.src = URL.createObjectURL(file);
-      });
-    }
-
-    function showResult(data) {
+    function showResult(item) {
       document.getElementById("resultCard").classList.add("show");
-      document.getElementById("resultImg").src = data.url;
-      document.getElementById("resultUrl").textContent = data.url;
+      document.getElementById("resultImg").src = item.url;
+      document.getElementById("resultUrl").textContent = item.url;
+
+      const saved = 100 - Math.round((item.webpSize / item.originalSize) * 100);
+      const info = document.getElementById("compressInfo");
+      if (saved > 0) {
+        info.innerHTML = formatSize(item.originalSize) + " → " + formatSize(item.webpSize) + " · 省 <b>" + saved + "%</b>";
+      } else {
+        info.innerHTML = formatSize(item.originalSize) + " → " + formatSize(item.webpSize) + " · 增大 " + Math.abs(saved) + "%";
+      }
     }
 
     document.getElementById("copyUrlBtn").addEventListener("click", () => {
@@ -365,7 +391,7 @@
     function renderHistory() {
       const history = JSON.parse(localStorage.getItem("uploadHistory") || "[]");
       const grid = document.getElementById("historyGrid");
-      if (history.length === 0) { grid.innerHTML = "<p style=\"color:var(--text-faint);font-size:13px;\">暂无记录</p>"; return; }
+      if (history.length === 0) { grid.innerHTML = '<p style="color:var(--text-faint);font-size:13px;">暂无记录</p>'; return; }
       grid.innerHTML = history.map(h => `
         <div class="history-item">
           <img src="${h.url}" loading="lazy" />
