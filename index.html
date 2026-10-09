@@ -247,7 +247,6 @@
     function handleFiles(files) {
       selectedFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
 
-      // 前端原图大小校验（10MB）→ 黄色横幅提示
       const oversized = selectedFiles.filter(f => f.size > MAX_ORIGINAL_SIZE);
       if (oversized.length > 0) {
         warnBanner.className = 'warn-banner show';
@@ -275,23 +274,20 @@
 
       const quality = parseFloat(qualitySlider.value);
       const uploadedResults = [];
-      const MAX_WEBP_SIZE = 1 * 1024 * 1024; // 1MB KV 限制
+      const MAX_WEBP_SIZE = 20 * 1024 * 1024; // Blob 单值 25MB，留余量限制 20MB
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         try {
-          // 1. 用 canvas 转 webp
           const webpBlob = await convertToWebP(file, quality);
 
-          // 检查转后大小 → 超 1MB 直接 alert，不写进 warn-banner
           if (webpBlob.size > MAX_WEBP_SIZE) {
-            alert(`"${file.name}" 转 WebP 后大小为 ${(webpBlob.size/1024/1024).toFixed(2)}MB，超过 1MB 存储限制。请降低质量滑块到 0.5 以下后重试。`);
+            alert(`"${file.name}" 转 WebP 后过大 (${(webpBlob.size/1024/1024).toFixed(2)}MB)，请降低质量后重试。`);
             continue;
           }
 
           progressFill.style.width = `${((i + 0.5) / selectedFiles.length) * 100}%`;
 
-          // 2. 上传到边缘函数
           const formData = new FormData();
           formData.append('file', webpBlob, file.name.replace(/\.[^.]+$/, '.webp'));
 
@@ -311,7 +307,6 @@
         progressFill.style.width = `${((i + 1) / selectedFiles.length) * 100}%`;
       }
 
-      // 显示最后一张结果
       if (uploadedResults.length > 0) {
         showResult(uploadedResults[uploadedResults.length - 1]);
       }
