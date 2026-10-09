@@ -1,5 +1,6 @@
 import { getStore } from "@edgeone/pages-blob";
 
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const JSON_HEADERS = { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" };
@@ -8,10 +9,11 @@ function json(payload, status) {
   return new Response(JSON.stringify(payload), { status: status || 200, headers: JSON_HEADERS });
 }
 
-function checkPassword(body) {
-  if (!body || typeof body.password !== "string") return false;
-  if (!ADMIN_PASSWORD) return false;
-  return body.password === ADMIN_PASSWORD;
+function checkCredential(body) {
+  if (!body) return false;
+  if (typeof body.username !== "string" || typeof body.password !== "string") return false;
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD) return false;
+  return body.username === ADMIN_USERNAME && body.password === ADMIN_PASSWORD;
 }
 
 function formatList(blobs) {
@@ -51,12 +53,16 @@ export default async function onRequest(context) {
     return json({ success: false, error: "参数解析失败" }, 400);
   }
 
+  if (!ADMIN_USERNAME) {
+    return json({ success: false, error: "服务端未配置 ADMIN_USERNAME 环境变量" }, 500);
+  }
+
   if (!ADMIN_PASSWORD) {
     return json({ success: false, error: "服务端未配置 ADMIN_PASSWORD 环境变量" }, 500);
   }
 
-  if (!checkPassword(body)) {
-    return json({ success: false, error: "密码错误" }, 401);
+  if (!checkCredential(body)) {
+    return json({ success: false, error: "账号或密码错误" }, 401);
   }
 
   const store = getStore("img_store");
