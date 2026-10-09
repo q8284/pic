@@ -1,9 +1,10 @@
 {
   "name": "edge-imgbed",
   "version": "1.0.0",
+  "description": "基于腾讯云 EdgeOne Pages 的 WebP 图床",
   "private": true,
   "scripts": {
-    "build": "echo 'No build needed'"
+    "build": "echo No build needed"
   },
   "dependencies": {
     "@edgeone/pages-blob": "latest"
