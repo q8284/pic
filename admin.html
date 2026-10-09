@@ -38,11 +38,11 @@
       --input-bg: #ffffff;
       --code-bg: #0f172a;
       --code-text: #e2e8f0;
-      --code-inline-bg: #eef2f7;
-      --code-inline-text: #0f766e;
       --danger: #dc2626;
       --danger-bg: rgba(220,38,38,0.1);
       --danger-glow: rgba(220,38,38,0.15);
+      --success: #059669;
+      --skeleton: rgba(15,23,42,0.06);
     }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -63,22 +63,22 @@
       --input-bg: #1e293b;
       --code-bg: #020617;
       --code-text: #e2e8f0;
-      --code-inline-bg: #1e293b;
-      --code-inline-text: #5eead4;
       --danger: #f87171;
       --danger-bg: rgba(248,113,113,0.15);
       --danger-glow: rgba(248,113,113,0.25);
+      --success: #34d399;
+      --skeleton: rgba(255,255,255,0.06);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { min-height: 100vh; font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); background-image: var(--bg-gradient); background-attachment: fixed; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; line-height: 1.6; }
-    .shell { width: min(1080px, calc(100vw - 32px)); margin: 0 auto; padding: 24px 0 48px; }
+    .shell { width: min(1180px, calc(100vw - 32px)); margin: 0 auto; padding: 24px 0 48px; }
 
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .brand { display: flex; align-items: center; gap: 8px; }
     .brand .logo { width: 26px; height: 26px; display: block; flex-shrink: 0; }
     .eyebrow { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; font-family: "Outfit", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary-strong); background: var(--primary-glow); border: 1px solid var(--panel-border); }
-    .icon-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-border); background: var(--panel); cursor: pointer; color: var(--text); transition: background 0.2s, transform 0.2s; }
+    .icon-btn { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-border); background: var(--panel); cursor: pointer; color: var(--text); transition: background 0.2s, transform 0.2s; flex-shrink: 0; }
     .icon-btn:hover { background: var(--input-bg); transform: translateY(-2px); }
     .icon-btn svg { position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.25s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .icon-btn .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
@@ -92,10 +92,13 @@
     h1 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: clamp(24px, 4vw, 36px); line-height: 1.15; letter-spacing: -0.03em; background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .lead { color: var(--text-muted); font-size: 15px; line-height: 1.7; max-width: 720px; }
 
-    .login-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); margin-bottom: 22px; }
-    .login-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .login-row input { flex: 1; min-width: 200px; padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
-    .login-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .login-card { padding: 28px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); margin-bottom: 22px; max-width: 560px; }
+    .login-card.hidden { display: none; }
+    .login-title { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+    .login-sub { font-size: 13px; color: var(--text-faint); margin-bottom: 18px; }
+    .field { margin-bottom: 12px; }
+    .field input { width: 100%; padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border: 0; border-radius: 10px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 14px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 6px 18px var(--primary-glow); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
@@ -105,37 +108,67 @@
     .btn-danger { background: linear-gradient(135deg, #dc2626, #f43f5e); box-shadow: 0 6px 18px var(--danger-glow); }
     .btn-ghost { background: var(--input-bg); color: var(--text); border: 1px solid var(--panel-border); box-shadow: none; }
     .btn-ghost:hover { background: var(--panel-border); filter: none; }
+    .btn-sm { padding: 9px 16px; font-size: 13px; }
 
     .error-banner { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--danger-bg); color: var(--danger); font-size: 13px; display: none; }
     .error-banner.show { display: block; }
 
+    .session-bar { display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 22px; border: 1px solid var(--panel-border); border-radius: 16px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); margin-bottom: 22px; flex-wrap: wrap; }
+    .session-bar.show { display: flex; }
+    .session-info { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; flex-shrink: 0; text-transform: uppercase; }
+    .session-name { font-family: "Outfit", sans-serif; font-weight: 600; font-size: 14px; }
+    .session-tag { font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 4px; }
+    .session-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .session-actions { display: flex; gap: 8px; }
+
     .manage-card { padding: 24px; border: 1px solid var(--panel-border); border-radius: 20px; background: var(--panel); box-shadow: var(--card-shadow); backdrop-filter: blur(16px); display: none; }
     .manage-card.show { display: block; }
-    .manage-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
-    .manage-head h2 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 10px; }
-    .manage-head h2::before { content: ""; width: 4px; height: 18px; border-radius: 2px; background: linear-gradient(180deg, var(--primary), var(--accent)); }
-    .stat-line { font-size: 13px; color: var(--text-muted); font-family: "JetBrains Mono", monospace; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-    .item { border: 1px solid var(--panel-border); border-radius: 12px; overflow: hidden; background: var(--input-bg); transition: transform 0.2s, box-shadow 0.2s; }
-    .item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--primary-glow); }
-    .item .thumb { width: 100%; height: 120px; object-fit: cover; display: block; background: var(--panel-border); }
-    .item .meta { padding: 10px 12px; }
-    .item .name { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text); word-break: break-all; margin-bottom: 4px; }
-    .item .size { font-size: 11px; color: var(--text-faint); font-family: "JetBrains Mono", monospace; }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--panel-border); margin-bottom: 18px; }
+    .search-box { position: relative; flex: 1; min-width: 200px; }
+    .search-box svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: none; stroke: var(--text-faint); stroke-width: 2; stroke-linecap: round; }
+    .search-box input { width: 100%; padding: 10px 14px 10px 36px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .select-all { display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); cursor: pointer; font-size: 13px; font-weight: 500; user-select: none; transition: border-color 0.2s; white-space: nowrap; }
+    .select-all:hover { border-color: var(--primary); }
+    .select-all input { accent-color: var(--primary); cursor: pointer; width: 15px; height: 15px; }
+    .stat-line { font-size: 12.5px; color: var(--text-muted); font-family: "JetBrains Mono", monospace; white-space: nowrap; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .item { position: relative; border: 1px solid var(--panel-border); border-radius: 14px; overflow: hidden; background: var(--input-bg); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+    .item:hover { transform: translateY(-3px); box-shadow: 0 10px 24px var(--primary-glow); border-color: var(--primary); }
+    .item.selected { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    .item .check { position: absolute; top: 8px; left: 8px; z-index: 2; width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .item:hover .check, .item.selected .check { opacity: 1; }
+    .item .thumb-wrap { position: relative; height: 130px; background: var(--panel-border); overflow: hidden; }
+    .item .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .item:hover .thumb { transform: scale(1.05); }
+    .item .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+    .item:hover .overlay { opacity: 1; }
+    .item .overlay span { color: #fff; font-size: 12px; font-weight: 600; padding: 6px 14px; border: 1px solid rgba(255,255,255,0.4); border-radius: 8px; }
+    .item .meta { padding: 11px 12px; }
+    .item .name { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text); word-break: break-all; margin-bottom: 5px; line-height: 1.4; }
+    .item .sub { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-faint); font-family: "JetBrains Mono", monospace; }
     .item .actions { display: flex; gap: 6px; padding: 0 12px 12px; }
     .item .actions button { flex: 1; padding: 7px 10px; border: 0; border-radius: 8px; font-family: "Outfit", sans-serif; font-weight: 600; font-size: 12px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); cursor: pointer; transition: all 0.2s; }
     .item .actions button:hover { filter: brightness(1.08); }
     .item .actions button.del { background: linear-gradient(135deg, #dc2626, #f43f5e); }
     .item .actions button.copied { background: linear-gradient(135deg, #059669, #10b981); }
 
-    .empty { color: var(--text-faint); font-size: 14px; text-align: center; padding: 32px 0; }
-    .loading { color: var(--text-muted); font-size: 14px; text-align: center; padding: 32px 0; }
+    .empty { color: var(--text-faint); font-size: 14px; text-align: center; padding: 48px 0; }
+    .empty svg { width: 40px; height: 40px; stroke: var(--text-faint); stroke-width: 1.5; fill: none; margin-bottom: 10px; opacity: 0.5; }
+    .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .skeleton-item { border: 1px solid var(--panel-border); border-radius: 14px; overflow: hidden; }
+    .skeleton-thumb { height: 130px; background: var(--skeleton); animation: pulse 1.4s ease-in-out infinite; }
+    .skeleton-line { height: 10px; margin: 12px; border-radius: 5px; background: var(--skeleton); animation: pulse 1.4s ease-in-out infinite; }
+    .skeleton-line.short { width: 55%; margin-top: 0; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
     .footer { margin-top: 32px; padding: 22px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .hero, .login-card, .manage-card { background: var(--bg); }
+      .hero, .login-card, .manage-card, .session-bar { background: var(--bg); }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -144,11 +177,14 @@
     @media (max-width: 720px) {
       .shell { padding: 16px 0 32px; }
       .hero { padding: 26px 22px; border-radius: 20px; }
-      .login-card, .manage-card { padding: 20px; border-radius: 16px; }
-      .login-row { flex-direction: column; align-items: stretch; }
-      .login-row input { min-width: 0; }
+      .login-card, .manage-card { padding: 18px; border-radius: 16px; }
+      .session-bar { padding: 14px 16px; }
       .btn { width: 100%; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+      .session-actions { width: 100%; }
+      .session-actions .btn { width: auto; flex: 1; }
+      .grid, .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+      .toolbar { gap: 8px; }
+      .search-box { min-width: 100%; }
       body { background-attachment: scroll; }
     }
   </style>
@@ -189,29 +225,62 @@
     <main>
       <section class="hero">
         <h1>图床管理</h1>
-        <p class="lead">查看 Blob 存储中的全部图片，支持复制链接与删除单张。操作不可恢复，请谨慎处理。</p>
+        <p class="lead">查看 Blob 存储中的全部图片，支持搜索、复制直链与批量删除。删除操作不可恢复，请谨慎处理。</p>
       </section>
 
-      <section class="login-card">
-        <div class="login-row">
-          <input type="text" id="usernameInput" placeholder="请输入账号" autocomplete="username" />
-          <input type="password" id="passwordInput" placeholder="请输入密码" autocomplete="current-password" />
-          <button class="btn" id="loginBtn" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-            <span>进入管理</span>
-          </button>
+      <section class="login-card" id="loginCard">
+        <div class="login-title">登录管理后台</div>
+        <div class="login-sub">请输入在服务端环境变量中配置的账号与密码</div>
+        <div class="field">
+          <input type="text" id="usernameInput" placeholder="账号" autocomplete="username" />
         </div>
+        <div class="field">
+          <input type="password" id="passwordInput" placeholder="密码" autocomplete="current-password" />
+        </div>
+        <button class="btn" id="loginBtn" type="button" style="width:100%">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+          <span>进入管理</span>
+        </button>
         <div class="error-banner" id="errorBanner"></div>
       </section>
 
+      <section class="session-bar" id="sessionBar">
+        <div class="session-info">
+          <div class="avatar" id="avatar">A</div>
+          <div>
+            <div class="session-name" id="sessionName"></div>
+            <div class="session-tag">已登录</div>
+          </div>
+        </div>
+        <div class="session-actions">
+          <button class="btn btn-ghost btn-sm" id="refreshBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg>
+            <span>刷新</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" id="logoutBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
+            <span>退出</span>
+          </button>
+        </div>
+      </section>
+
       <section class="manage-card" id="manageCard">
-        <div class="manage-head">
-          <h2>图片列表</h2>
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
+            <input type="text" id="searchInput" placeholder="搜索文件名" />
+          </div>
+          <label class="select-all">
+            <input type="checkbox" id="selectAll" />
+            <span>全选</span>
+          </label>
+          <button class="btn btn-danger btn-sm" id="batchDeleteBtn" type="button" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+            <span>删除所选</span>
+          </button>
           <div class="stat-line" id="statLine"></div>
         </div>
-        <div id="gridBox">
-          <div class="loading">加载中</div>
-        </div>
+        <div id="gridBox"></div>
       </section>
     </main>
 
@@ -221,6 +290,8 @@
   </div>
 
   <script>
+    const SESSION_KEY = "imgbed_admin_session";
+
     document.getElementById("themeToggle").addEventListener("click", () => {
       const cur = document.documentElement.getAttribute("data-theme");
       const next = cur === "dark" ? "light" : "dark";
@@ -228,20 +299,51 @@
       localStorage.setItem("theme", next);
     });
 
+    const loginCard = document.getElementById("loginCard");
     const usernameInput = document.getElementById("usernameInput");
     const passwordInput = document.getElementById("passwordInput");
     const loginBtn = document.getElementById("loginBtn");
     const errorBanner = document.getElementById("errorBanner");
+    const sessionBar = document.getElementById("sessionBar");
+    const sessionName = document.getElementById("sessionName");
+    const avatar = document.getElementById("avatar");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
     const manageCard = document.getElementById("manageCard");
     const gridBox = document.getElementById("gridBox");
     const statLine = document.getElementById("statLine");
+    const searchInput = document.getElementById("searchInput");
+    const selectAll = document.getElementById("selectAll");
+    const batchDeleteBtn = document.getElementById("batchDeleteBtn");
 
     let currentUsername = "";
     let currentPassword = "";
     let fileList = [];
+    let selected = new Set();
+    let keyword = "";
 
     function credential() {
       return { username: currentUsername, password: currentPassword };
+    }
+
+    function saveSession() {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ username: currentUsername, password: currentPassword }));
+    }
+
+    function readSession() {
+      try {
+        const raw = sessionStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (!obj || typeof obj.username !== "string" || typeof obj.password !== "string") return null;
+        return obj;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function clearSession() {
+      sessionStorage.removeItem(SESSION_KEY);
     }
 
     function showError(message) {
@@ -259,6 +361,12 @@
       if (bytes < 1024) return bytes + " B";
       if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
       return (bytes / 1024 / 1024).toFixed(2) + " MB";
+    }
+
+    function formatTime(name) {
+      const m = String(name).match(/^(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/);
+      if (!m) return "";
+      return "20" + m[1] + "-" + m[2] + "-" + m[3] + " " + m[4] + ":" + m[5];
     }
 
     function copyText(text) {
@@ -302,8 +410,112 @@
       }
     }
 
+    function renderSkeleton() {
+      gridBox.innerHTML = '<div class="skeleton-grid">' + Array.from({ length: 8 }).map(() => `
+        <div class="skeleton-item">
+          <div class="skeleton-thumb"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      `).join("") + '</div>';
+    }
+
+    function visibleFiles() {
+      if (!keyword) return fileList;
+      return fileList.filter(f => f.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1);
+    }
+
+    function updateStat() {
+      const list = visibleFiles();
+      const totalSize = list.reduce((sum, f) => sum + (f.size || 0), 0);
+      const picked = selected.size;
+      let text = "共 " + list.length + " 张 · " + formatSize(totalSize);
+      if (picked > 0) text += " · 已选 " + picked + " 张";
+      statLine.textContent = text;
+      batchDeleteBtn.disabled = picked === 0;
+      const visibleNames = new Set(list.map(f => f.key));
+      const allChecked = list.length > 0 && list.every(f => selected.has(f.key));
+      selectAll.checked = allChecked;
+      selectAll.indeterminate = !allChecked && picked > 0;
+      void visibleNames;
+    }
+
+    function renderGrid() {
+      const list = visibleFiles();
+
+      if (fileList.length === 0) {
+        gridBox.innerHTML = `
+          <div class="empty">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z" /><path d="M8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" /></svg>
+            <div>还没有上传任何图片</div>
+          </div>`;
+        updateStat();
+        return;
+      }
+
+      if (list.length === 0) {
+        gridBox.innerHTML = '<div class="empty">没有匹配「' + keyword + '」的图片</div>';
+        updateStat();
+        return;
+      }
+
+      gridBox.innerHTML = '<div class="grid">' + list.map(f => {
+        const isSel = selected.has(f.key);
+        const time = formatTime(f.name);
+        return `
+        <div class="item${isSel ? " selected" : ""}" data-key="${f.key}">
+          <input type="checkbox" class="check" data-action="check" data-key="${f.key}"${isSel ? " checked" : ""} />
+          <div class="thumb-wrap">
+            <img class="thumb" src="/img/${f.name}" alt="${f.name}" loading="lazy" />
+            <div class="overlay" data-action="preview" data-key="${f.key}"><span>点击预览</span></div>
+          </div>
+          <div class="meta">
+            <div class="name">${f.name}</div>
+            <div class="sub">
+              <span>${formatSize(f.size)}</span>
+              <span>${time}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" data-action="copy" data-key="${f.key}">复制</button>
+            <button type="button" class="del" data-action="delete" data-key="${f.key}">删除</button>
+          </div>
+        </div>`;
+      }).join("") + '</div>';
+
+      gridBox.querySelectorAll("[data-action]").forEach(el => {
+        el.addEventListener("click", () => {
+          const key = el.dataset.key;
+          const action = el.dataset.action;
+          const file = fileList.find(f => f.key === key);
+          if (!file) return;
+
+          if (action === "check") {
+            if (el.checked) selected.add(key);
+            else selected.delete(key);
+            const card = gridBox.querySelector('.item[data-key="' + key + '"]');
+            if (card) card.classList.toggle("selected", el.checked);
+            updateStat();
+          } else if (action === "preview") {
+            window.open(location.origin + "/img/" + file.name, "_blank");
+          } else if (action === "copy") {
+            const url = location.origin + "/img/" + file.name;
+            copyText(url).then(() => {
+              el.classList.add("copied");
+              el.textContent = "已复制";
+              setTimeout(() => { el.classList.remove("copied"); el.textContent = "复制"; }, 1500);
+            });
+          } else if (action === "delete") {
+            handleDelete(file, el);
+          }
+        });
+      });
+
+      updateStat();
+    }
+
     async function loadFiles() {
-      gridBox.innerHTML = '<div class="loading">加载中</div>';
+      renderSkeleton();
 
       let data;
       try {
@@ -317,51 +529,15 @@
       if (!data.success) {
         showError(data.error || "加载失败");
         gridBox.innerHTML = '<div class="empty">加载失败</div>';
+        if (data.error && data.error.indexOf("环境变量") !== -1) {
+          enterLoggedOut();
+        }
         return;
       }
 
       fileList = data.data.files || [];
-
-      if (fileList.length === 0) {
-        gridBox.innerHTML = '<div class="empty">暂无图片</div>';
-        statLine.textContent = "共 0 张";
-        return;
-      }
-
-      const totalSize = fileList.reduce((sum, f) => sum + (f.size || 0), 0);
-      statLine.textContent = "共 " + fileList.length + " 张 · " + formatSize(totalSize);
-
-      gridBox.innerHTML = '<div class="grid">' + fileList.map((f, index) => `
-        <div class="item">
-          <img class="thumb" src="/img/${f.name}" alt="${f.name}" loading="lazy" />
-          <div class="meta">
-            <div class="name">${f.name}</div>
-            <div class="size">${formatSize(f.size)}</div>
-          </div>
-          <div class="actions">
-            <button type="button" data-action="copy" data-index="${index}">复制</button>
-            <button type="button" class="del" data-action="delete" data-index="${index}">删除</button>
-          </div>
-        </div>
-      `).join("") + '</div>';
-
-      gridBox.querySelectorAll("button[data-action]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const index = parseInt(btn.dataset.index, 10);
-          const file = fileList[index];
-          if (!file) return;
-          if (btn.dataset.action === "copy") {
-            const url = location.origin + "/img/" + file.name;
-            copyText(url).then(() => {
-              btn.classList.add("copied");
-              btn.textContent = "已复制";
-              setTimeout(() => { btn.classList.remove("copied"); btn.textContent = "复制"; }, 1500);
-            });
-          } else if (btn.dataset.action === "delete") {
-            handleDelete(file, btn);
-          }
-        });
-      });
+      selected.clear();
+      renderGrid();
     }
 
     async function handleDelete(file, btn) {
@@ -370,15 +546,76 @@
       btn.disabled = true;
       btn.textContent = "删除中";
 
-      const data = await callAdmin(Object.assign(credential(), { action: "delete", key: file.key }));
+      let data;
+      try {
+        data = await callAdmin(Object.assign(credential(), { action: "delete", key: file.key }));
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = original;
+        showError(e && e.message ? e.message : "删除失败");
+        return;
+      }
 
       if (data.success) {
+        selected.delete(file.key);
         await loadFiles();
       } else {
         btn.disabled = false;
         btn.textContent = original;
         showError(data.error || "删除失败");
       }
+    }
+
+    async function handleBatchDelete() {
+      const keys = Array.from(selected);
+      if (keys.length === 0) return;
+      if (!confirm("确定删除选中的 " + keys.length + " 张图片吗？删除后不可恢复。")) return;
+
+      batchDeleteBtn.disabled = true;
+      const label = batchDeleteBtn.querySelector("span");
+      const original = label.textContent;
+      label.textContent = "删除中";
+
+      let failCount = 0;
+      for (const key of keys) {
+        try {
+          const data = await callAdmin(Object.assign(credential(), { action: "delete", key: key }));
+          if (!data.success) failCount++;
+        } catch (e) {
+          failCount++;
+        }
+      }
+
+      label.textContent = original;
+      batchDeleteBtn.disabled = false;
+
+      if (failCount > 0) showError("有 " + failCount + " 张删除失败，请重试");
+      await loadFiles();
+    }
+
+    function enterLoggedIn(username, password) {
+      currentUsername = username;
+      currentPassword = password;
+      saveSession();
+      clearError();
+      loginCard.classList.add("hidden");
+      sessionBar.classList.add("show");
+      manageCard.classList.add("show");
+      sessionName.textContent = username;
+      avatar.textContent = username.charAt(0);
+    }
+
+    function enterLoggedOut() {
+      currentUsername = "";
+      currentPassword = "";
+      clearSession();
+      loginCard.classList.remove("hidden");
+      sessionBar.classList.remove("show");
+      manageCard.classList.remove("show");
+      gridBox.innerHTML = "";
+      fileList = [];
+      selected.clear();
+      passwordInput.value = "";
     }
 
     loginBtn.addEventListener("click", async () => {
@@ -394,11 +631,9 @@
       try {
         const data = await callAdmin({ username, password, action: "list" });
         if (data.success) {
-          currentUsername = username;
-          currentPassword = password;
-          manageCard.classList.add("show");
+          enterLoggedIn(username, password);
           fileList = data.data.files || [];
-          await loadFiles();
+          renderGrid();
           manageCard.scrollIntoView({ behavior: "smooth", block: "start" });
         } else {
           showError(data.error || "账号或密码错误");
@@ -418,6 +653,41 @@
     passwordInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") loginBtn.click();
     });
+
+    refreshBtn.addEventListener("click", () => {
+      selected.clear();
+      loadFiles();
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      enterLoggedOut();
+    });
+
+    searchInput.addEventListener("input", () => {
+      keyword = searchInput.value.trim();
+      renderGrid();
+    });
+
+    selectAll.addEventListener("change", () => {
+      const list = visibleFiles();
+      if (selectAll.checked) {
+        list.forEach(f => selected.add(f.key));
+      } else {
+        list.forEach(f => selected.delete(f.key));
+      }
+      renderGrid();
+    });
+
+    batchDeleteBtn.addEventListener("click", handleBatchDelete);
+
+    (function init() {
+      const session = readSession();
+      if (session && session.username && session.password) {
+        enterLoggedIn(session.username, session.password);
+        usernameInput.value = session.username;
+        loadFiles();
+      }
+    })();
   </script>
 </body>
 </html>
