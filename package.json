@@ -1,6 +1,11 @@
 {
-  "name": "edgeone-webp-bed",
+  "name": "edge-imgbed",
   "version": "1.0.0",
-  "description": "WebP Image Bed on EdgeOne Makers",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build needed'"
+  },
+  "dependencies": {
+    "@edgeone/pages-blob": "latest"
+  }
 }
