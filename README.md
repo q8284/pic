@@ -1,147 +1,93 @@
-# 🖼️ EdgeOne 图床
+# WebP 图床
 
-基于腾讯云 EdgeOne Pages 的免费图床，上传图片自动转换为 WebP 格式并返回直链。
+基于腾讯云 EdgeOne Pages 的免费图床。上传图片自动转换为 WebP 格式，返回可直接访问的完整直链，支持拖拽上传。
 
-## ✨ 特性
+在线地址：https://api.qjww.cn
 
-- **自动转 WebP**：上传任意格式图片，自动转换为 WebP，大幅减小体积
-- **拖拽上传**：支持拖拽和多文件上传
-- **即时返回**：上传完成立即返回直链、HTML、Markdown 三种格式
-- **上传历史**：本地保存最近 20 张上传记录
-- **API 支持**：提供 RESTful API，方便集成到第三方工具
-- **边缘加速**：图片通过 EdgeOne 全球节点缓存，访问极快
+## 特性
 
-## 📁 项目结构
+- 浏览器端自动将图片转换为 WebP 格式，大幅减小体积
+- 上传后返回带完整域名的直链，复制即可用
+- 支持拖拽上传与多文件批量上传
+- 支持深色与浅色主题切换
+- 本地保存最近 20 条上传记录
+- 内置 API 接口说明与调用示例
+- 图片存储于 EdgeOne Blob，边缘节点缓存加速
+
+## 目录结构
 
 ```
-edge-imgbed/
-├── index.html                  # 主页面（上传 + 预览 + API 文档）
-├── functions/
-│   ├── api/
-│   │   ├── upload.js           # 上传接口（接收 → 转WebP → 存KV）
-│   │   └── images.js           # 图片管理（列表/详情/删除）
-│   └── i/
-│       └── [file].js           # 图片访问路由（/i/xxx.webp）
+.
+├── index.html                     首页
 ├── package.json
-└── edgeone.json                # EdgeOne 配置
+├── README.md
+└── cloud-functions/
+    ├── upload.js                  上传接口
+    └── img/
+        └── [file].js              图片读取接口
 ```
 
-## 🌐 API 接口
+## API 接口
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/upload` | 上传图片，自动转 WebP |
-| GET | `/api/images` | 获取图片列表 |
-| GET | `/api/images/:id` | 获取单张图片信息 |
-| DELETE | `/api/images/:id` | 删除图片 |
-| GET | `/i/:filename` | 访问图片文件 |
+### 上传图片
 
-### 上传响应示例
+```
+POST https://api.qjww.cn/upload
+```
+
+表单字段：`file`，值为转换后的 WebP 文件。
+
+返回示例：
 
 ```json
 {
   "success": true,
   "data": {
-    "url": "https://your-domain/i/abc123.webp",
-    "id": "abc123",
-    "filename": "abc123.webp",
-    "size": 45231,
-    "originalSize": 128456,
-    "saved": 64.8
+    "filename": "261009155901511.webp",
+    "url": "https://api.qjww.cn/img/261009155901511.webp"
   }
 }
 ```
 
-### cURL 上传示例
+### 读取图片
 
-```bash
-curl -X POST "https://your-domain/api/upload" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -F "file=@/path/to/image.png"
+```
+GET https://api.qjww.cn/img/:file
 ```
 
-## ⚙️ 部署
+直接返回 WebP 二进制，响应头 `Content-Type: image/webp`，带一年缓存。
 
-### 1. 创建 KV 命名空间
+## 文件命名规则
 
-在 EdgeOne 控制台创建 KV 命名空间，记录命名空间 ID。
+文件名由上传时间的北京时间生成，格式为 `年月日时分秒毫秒.webp`：
 
-### 2. 配置环境变量
-
-编辑 `edgeone.json`，填入你的 KV 命名空间 ID：
-
-```json
-{
-  "env": {
-    "IMAGE_KV": {
-      "binding": "IMAGE_KV",
-      "type": "kv_namespace",
-      "id": "你的命名空间ID"
-    }
-  }
-}
+```
+261009155901511.webp
+26 年 10 月 09 日 15 时 59 分 01 秒 511 毫秒
 ```
 
-### 3. 部署
+小时随实际上传时刻变化，例如 16 点上传即以 `16` 开头。毫秒位保证同一时刻并发上传不会重名。
 
-1. 登录 [腾讯云 EdgeOne 控制台](https://console.cloud.tencent.com/edgeone)
-2. **边缘 Pages** → 创建项目 → 关联 GitHub 仓库
-3. 构建设置：
-   - 框架预设：`Other`
-   - 构建命令：**留空**
-   - 输出目录：`/`
-4. 环境变量中绑定 KV 命名空间
-5. 部署完成，绑定自定义域名
+## 部署步骤
 
-### 4. 本地开发
+1. 在 GitHub 创建仓库并上传本目录全部文件
+2. 登录腾讯云 EdgeOne 控制台，进入 Makers
+3. 创建 Pages 项目并关联该 GitHub 仓库
+4. 构建设置：框架预设选 `Other`，构建命令留空，输出目录填 `/`
+5. 等待首次部署完成，Blob 存储会在第一次上传时自动创建，无需手动新建命名空间
+6. 绑定自定义域名 `api.qjww.cn`
 
-```bash
-# 安装 EdgeOne CLI
-npm install -g @tencent/edgeone-pages-cli
+## 注意事项
 
-# 登录
-edgeone login
+- 代码中的 `DOMAIN` 常量已写死为 `https://api.qjww.cn`，更换域名需同步修改 `cloud-functions/upload.js` 顶部该常量
+- Blob 存储空间名为 `img_store`，写入与读取两端必须一致
+- 原图上传上限为 10 MB，由前端过滤，超过的文件会被自动跳过
+- 图片转换在浏览器端完成，边缘函数仅负责写入与读取，不参与转码
 
-# 本地开发
-edgeone dev
-```
+## 本地预览
 
-## 📝 配置说明
+直接打开 `index.html` 仅能查看界面，上传功能需部署到 EdgeOne 后可用。
 
-### 图片转换
-
-当前使用 EdgeOne 内置的 `ImageTransformer`（如环境支持）进行 WebP 转换。如果环境不支持，会返回原始格式。
-
-如需更高质量的转换，可以：
-1. 使用 Cloudflare Images / EdgeOne 图像处理服务
-2. 自建转换服务，通过 webhook 调用
-3. 使用 wasm 版本的 `sharp` 或 `libwebp`
-
-### 存储方案
-
-- **KV**：适合小图片（单值限制 25MB），简单方便
-- **R2**：适合大文件，推荐生产使用
-- **GitHub**：类似 random-pic-api 方案，通过 API 提交
-
-## 💡 使用方式
-
-### 网页上传
-
-直接访问首页，拖拽或点击选择图片即可。
-
-### API 上传
-
-```javascript
-const form = new FormData();
-form.append('file', fileInput.files[0]);
-
-fetch('/api/upload', {
-  method: 'POST',
-  headers: { 'Authorization': 'Bearer YOUR_TOKEN' },
-  body: form
-}).then(res => res.json()).then(console.log);
-```
-
-## 📄 License
+## License
 
 MIT
