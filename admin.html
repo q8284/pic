@@ -280,13 +280,13 @@
     async function callAdmin(payload) {
       let resp;
       try {
-        resp = await fetch("/admin", {
+        resp = await fetch("/api/admin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
       } catch (e) {
-        throw new Error("无法连接 /admin 接口，请确认管理函数已部署");
+        throw new Error("无法连接 /api/admin 接口，请确认管理函数已部署");
       }
 
       const text = await resp.text();
