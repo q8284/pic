@@ -72,7 +72,6 @@
     .hidden { display: none !important; }
 
     .header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--panel-border); }
-    .header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
     .brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .brand .logo { width: 26px; height: 26px; display: block; }
     .eyebrow { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; font-family: "Outfit", sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary-strong); background: var(--primary-glow); border: 1px solid var(--panel-border); }
@@ -87,10 +86,6 @@
     :root[data-theme="dark"] .icon-btn .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
     :root:not([data-theme]) .icon-btn .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
 
-    .user-chip { display: flex; align-items: center; gap: 9px; padding: 5px 6px 5px 5px; border: 1px solid var(--panel-border); border-radius: 999px; background: var(--panel); }
-    .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; flex-shrink: 0; }
-    .user-name { font-size: 13px; font-weight: 600; padding-right: 6px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 18px; border: 0; border-radius: 10px; font-family: "Outfit", sans-serif; font-weight: 700; font-size: 13.5px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 6px 18px var(--primary-glow); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
     .btn:active { transform: scale(0.97); }
@@ -99,8 +94,6 @@
     .btn-danger { background: linear-gradient(135deg, #dc2626, #f43f5e); box-shadow: 0 6px 18px var(--danger-glow); }
     .btn-ghost { background: var(--input-bg); color: var(--text); border: 1px solid var(--panel-border); box-shadow: none; font-weight: 600; }
     .btn-ghost:hover { background: var(--hover-bg); filter: none; }
-    .btn-icon { padding: 9px; border-radius: 9px; }
-    .btn-icon svg { width: 16px; height: 16px; }
 
     .hero { display: grid; gap: 12px; padding: 36px 32px; border: 1px solid var(--panel-border); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(16px); margin-bottom: 22px; }
     h1 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: clamp(24px, 4vw, 36px); line-height: 1.15; letter-spacing: -0.03em; background: linear-gradient(120deg, var(--text) 0%, var(--primary) 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -128,8 +121,8 @@
     .check-label { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); cursor: pointer; font-size: 13px; font-weight: 500; user-select: none; transition: border-color 0.2s; white-space: nowrap; }
     .check-label:hover { border-color: var(--primary); }
     .check-label input { accent-color: var(--primary); cursor: pointer; width: 15px; height: 15px; }
-    .page-size { padding: 9px 12px; border: 1px solid var(--panel-border); border-radius: 10px; background: var(--input-bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; outline: none; cursor: pointer; }
-    .page-size:focus { border-color: var(--primary); }
+    .link-btn { padding: 9px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--text-muted); font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .link-btn:hover { background: var(--hover-bg); color: var(--text); }
     .stat-line { font-size: 12.5px; color: var(--text-muted); font-family: "JetBrains Mono", monospace; white-space: nowrap; }
 
     .grid-panel { border: 1px solid var(--panel-border); border-radius: 0 0 16px 16px; background: var(--panel); backdrop-filter: blur(16px); padding: 20px; }
@@ -137,14 +130,16 @@
     .item { position: relative; border: 1px solid var(--panel-border); border-radius: 14px; overflow: hidden; background: var(--input-bg); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
     .item:hover { transform: translateY(-3px); box-shadow: 0 10px 24px var(--primary-glow); border-color: var(--primary); }
     .item.selected { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
-    .item .check { position: absolute; top: 8px; left: 8px; z-index: 2; width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; opacity: 0; transition: opacity 0.2s; }
-    .item:hover .check, .item.selected .check { opacity: 1; }
+    .item .check { position: absolute; top: 8px; left: 8px; z-index: 3; width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; opacity: 1; transition: transform 0.15s; }
+    .item .check:hover { transform: scale(1.15); }
     .thumb-wrap { position: relative; height: 118px; background: var(--panel-border); overflow: hidden; cursor: pointer; }
     .thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
     .item:hover .thumb { transform: scale(1.06); }
     .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
     .item:hover .overlay { opacity: 1; }
     .overlay span { color: #fff; font-size: 11.5px; font-weight: 600; padding: 5px 12px; border: 1px solid rgba(255,255,255,0.45); border-radius: 7px; }
+    .selected-badge { position: absolute; top: 8px; right: 8px; z-index: 3; padding: 3px 9px; border-radius: 999px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em; display: none; }
+    .item.selected .selected-badge { display: block; }
     .meta { padding: 10px 11px; }
     .name { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--text); word-break: break-all; margin-bottom: 5px; line-height: 1.4; }
     .sub { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--text-faint); font-family: "JetBrains Mono", monospace; gap: 6px; }
@@ -190,9 +185,7 @@
     }
     @media (max-width: 720px) {
       .shell { padding: 14px 0 32px; }
-      .header { flex-wrap: wrap; gap: 10px; }
-      .header-right { width: 100%; justify-content: flex-end; }
-      .user-name { display: none; }
+      .header { gap: 10px; }
       .hero { padding: 26px 22px; border-radius: 20px; }
       .login-card { padding: 26px 22px; }
       .toolbar { padding: 14px; gap: 10px; }
@@ -210,34 +203,23 @@
 <body>
   <div class="shell">
     <header class="header">
-      <div class="header-left">
-        <div class="brand">
-          <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#14b8a6" />
-                <stop offset="100%" stop-color="#0891b2" />
-              </linearGradient>
-            </defs>
-            <path fill="url(#logoGrad)" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-          </svg>
-          <span class="eyebrow">Image Admin</span>
-        </div>
-        <div class="user-chip hidden" id="userChip">
-          <div class="avatar" id="avatar">A</div>
-          <div class="user-name" id="userName"></div>
-        </div>
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#14b8a6" />
+              <stop offset="100%" stop-color="#0891b2" />
+            </linearGradient>
+          </defs>
+          <path fill="url(#logoGrad)" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+        </svg>
+        <span class="eyebrow">Image Admin</span>
       </div>
       <div class="header-right">
-        <div class="toolbar-group hidden" id="loggedActions">
-          <button class="btn btn-ghost btn-icon" id="refreshBtn" type="button" title="刷新列表" aria-label="刷新列表">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg>
-          </button>
-          <button class="btn btn-ghost" id="logoutBtn" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
-            <span>退出</span>
-          </button>
-        </div>
+        <button class="btn btn-ghost hidden" id="logoutBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
+          <span>退出</span>
+        </button>
         <button id="themeToggle" class="icon-btn" aria-label="切换主题" title="单击切换日间夜间模式，双击恢复跟随系统">
           <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="5" />
@@ -296,6 +278,7 @@
               <input type="checkbox" id="selectAll" />
               <span>全选本页</span>
             </label>
+            <button class="link-btn hidden" id="clearSelBtn" type="button">清空选择</button>
             <button class="btn btn-danger" id="batchDeleteBtn" type="button" disabled>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
               <span>删除所选</span>
@@ -307,7 +290,7 @@
         <div class="grid-panel">
           <div id="gridBox"></div>
 
-          <div class="pager" id="pager">
+          <div class="pager hidden" id="pager">
             <div class="pager-info" id="pagerInfo"></div>
             <div class="pager-controls" id="pagerControls"></div>
           </div>
@@ -336,17 +319,13 @@
     const passwordInput = document.getElementById("passwordInput");
     const loginBtn = document.getElementById("loginBtn");
     const errorBanner = document.getElementById("errorBanner");
-    const userChip = document.getElementById("userChip");
-    const userName = document.getElementById("userName");
-    const avatar = document.getElementById("avatar");
-    const loggedActions = document.getElementById("loggedActions");
-    const refreshBtn = document.getElementById("refreshBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const manageCard = document.getElementById("manageCard");
     const gridBox = document.getElementById("gridBox");
     const statLine = document.getElementById("statLine");
     const searchInput = document.getElementById("searchInput");
     const selectAll = document.getElementById("selectAll");
+    const clearSelBtn = document.getElementById("clearSelBtn");
     const batchDeleteBtn = document.getElementById("batchDeleteBtn");
     const pager = document.getElementById("pager");
     const pagerInfo = document.getElementById("pagerInfo");
@@ -392,7 +371,7 @@
     }
 
     function formatSize(bytes) {
-      if (!bytes || bytes <= 0) return "未知";
+      if (!bytes || bytes <= 0) return "—";
       if (bytes < 1024) return bytes + " B";
       if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
       return (bytes / 1024 / 1024).toFixed(2) + " MB";
@@ -447,14 +426,44 @@
     }
 
     function totalPages() {
-      const total = filteredFiles().length;
-      return Math.max(1, Math.ceil(total / pageSize));
+      return Math.max(1, Math.ceil(filteredFiles().length / pageSize));
     }
 
     function pageFiles() {
       const list = filteredFiles();
       const start = (currentPage - 1) * pageSize;
       return list.slice(start, start + pageSize);
+    }
+
+    function toggleSelect(key, force) {
+      const want = typeof force === "boolean" ? force : !selected.has(key);
+      if (want) selected.add(key);
+      else selected.delete(key);
+
+      const card = gridBox.querySelector('.item[data-key="' + key + '"]');
+      if (card) card.classList.toggle("selected", want);
+      const box = gridBox.querySelector('input.check[data-key="' + key + '"]');
+      if (box) box.checked = want;
+
+      syncSelectionUI();
+    }
+
+    function clearSelection() {
+      if (selected.size === 0) return;
+      selected.clear();
+      gridBox.querySelectorAll(".item.selected").forEach(el => el.classList.remove("selected"));
+      gridBox.querySelectorAll("input.check").forEach(el => { el.checked = false; });
+      syncSelectionUI();
+    }
+
+    function syncSelectionUI() {
+      const list = pageFiles();
+      const allChecked = list.length > 0 && list.every(f => selected.has(f.key));
+      selectAll.checked = allChecked;
+      selectAll.indeterminate = !allChecked && list.some(f => selected.has(f.key));
+      batchDeleteBtn.disabled = selected.size === 0;
+      clearSelBtn.classList.toggle("hidden", selected.size === 0);
+      updateStat();
     }
 
     function renderSkeleton() {
@@ -471,10 +480,10 @@
     function updateStat() {
       const list = filteredFiles();
       const totalSize = list.reduce((sum, f) => sum + (f.size || 0), 0);
-      let text = "共 " + list.length + " 张 · " + formatSize(totalSize);
+      let text = "共 " + list.length + " 张";
+      if (totalSize > 0) text += " · " + formatSize(totalSize);
       if (selected.size > 0) text += " · 已选 " + selected.size;
       statLine.textContent = text;
-      batchDeleteBtn.disabled = selected.size === 0;
     }
 
     function renderPager() {
@@ -493,10 +502,10 @@
       const parts = [];
       parts.push('<button class="page-btn" data-page="prev"' + (currentPage === 1 ? " disabled" : "") + ' aria-label="上一页"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg></button>');
 
-      const window_ = 2;
+      const win = 2;
       const shown = new Set();
-      for (let i = 1; i <= Math.min(window_, pages); i++) shown.add(i);
-      for (let i = Math.max(1, pages - window_ + 1); i <= pages; i++) shown.add(i);
+      for (let i = 1; i <= Math.min(win, pages); i++) shown.add(i);
+      for (let i = Math.max(1, pages - win + 1); i <= pages; i++) shown.add(i);
       for (let i = currentPage - 1; i <= currentPage + 1; i++) {
         if (i >= 1 && i <= pages) shown.add(i);
       }
@@ -544,14 +553,14 @@
             <div>还没有上传任何图片</div>
           </div>`;
         pager.classList.add("hidden");
-        updateStat();
+        syncSelectionUI();
         return;
       }
 
       if (total === 0) {
         gridBox.innerHTML = '<div class="empty">没有匹配「' + keyword + '」的图片</div>';
         pager.classList.add("hidden");
-        updateStat();
+        syncSelectionUI();
         return;
       }
 
@@ -564,7 +573,8 @@
         const isSel = selected.has(f.key);
         return `
         <div class="item${isSel ? " selected" : ""}" data-key="${f.key}">
-          <input type="checkbox" class="check" data-action="check" data-key="${f.key}"${isSel ? " checked" : ""} aria-label="选择" />
+          <input type="checkbox" class="check" data-action="check" data-key="${f.key}"${isSel ? " checked" : ""} aria-label="选择此图" />
+          <div class="selected-badge">已选</div>
           <div class="thumb-wrap" data-action="preview" data-key="${f.key}">
             <img class="thumb" src="/img/${f.name}" alt="${f.name}" loading="lazy" />
             <div class="overlay"><span>点击预览</span></div>
@@ -584,18 +594,15 @@
       }).join("") + '</div>';
 
       gridBox.querySelectorAll("[data-action]").forEach(el => {
-        el.addEventListener("click", () => {
+        el.addEventListener("click", (e) => {
           const key = el.dataset.key;
           const action = el.dataset.action;
           const file = fileList.find(f => f.key === key);
           if (!file) return;
 
           if (action === "check") {
-            if (el.checked) selected.add(key);
-            else selected.delete(key);
-            const card = gridBox.querySelector('.item[data-key="' + key + '"]');
-            if (card) card.classList.toggle("selected", el.checked);
-            updateStat();
+            e.stopPropagation();
+            toggleSelect(key, el.checked);
           } else if (action === "preview") {
             window.open(location.origin + "/img/" + file.name, "_blank");
           } else if (action === "copy") {
@@ -610,14 +617,8 @@
         });
       });
 
-      const pageKeys = new Set(list.map(f => f.key));
-      const allChecked = list.length > 0 && list.every(f => selected.has(f.key));
-      selectAll.checked = allChecked;
-      selectAll.indeterminate = !allChecked && list.some(f => selected.has(f.key));
-      void pageKeys;
-
       renderPager();
-      updateStat();
+      syncSelectionUI();
     }
 
     async function loadFiles() {
@@ -708,11 +709,8 @@
       hero.classList.add("hidden");
       loginWrap.classList.add("hidden");
       manageCard.classList.remove("hidden");
-      userChip.classList.remove("hidden");
-      loggedActions.classList.remove("hidden");
-      userName.textContent = username;
-      avatar.textContent = username.charAt(0);
-      document.title = "图床管理 · " + username;
+      logoutBtn.classList.remove("hidden");
+      document.title = "图床管理";
     }
 
     function enterLoggedOut() {
@@ -722,8 +720,7 @@
       hero.classList.remove("hidden");
       loginWrap.classList.remove("hidden");
       manageCard.classList.add("hidden");
-      userChip.classList.add("hidden");
-      loggedActions.classList.add("hidden");
+      logoutBtn.classList.add("hidden");
       gridBox.innerHTML = "";
       pager.classList.add("hidden");
       fileList = [];
@@ -766,11 +763,6 @@
     usernameInput.addEventListener("keydown", e => { if (e.key === "Enter") loginBtn.click(); });
     passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") loginBtn.click(); });
 
-    refreshBtn.addEventListener("click", () => {
-      currentPage = 1;
-      loadFiles();
-    });
-
     logoutBtn.addEventListener("click", () => {
       if (confirm("确定退出登录吗？")) enterLoggedOut();
     });
@@ -786,6 +778,14 @@
       if (selectAll.checked) list.forEach(f => selected.add(f.key));
       else list.forEach(f => selected.delete(f.key));
       renderGrid();
+    });
+
+    clearSelBtn.addEventListener("click", clearSelection);
+
+    gridBox.addEventListener("click", (e) => {
+      if (e.target === gridBox || (e.target.classList && e.target.classList.contains("grid"))) {
+        clearSelection();
+      }
     });
 
     batchDeleteBtn.addEventListener("click", handleBatchDelete);
