@@ -51,6 +51,14 @@ export default async function onRequest(context) {
       contentType: "image/webp",
       consistency: "strong"
     });
+
+    await store.set("meta/" + key, JSON.stringify({
+      size: buf.byteLength,
+      uploadedAt: new Date().toISOString()
+    }), {
+      contentType: "application/json",
+      consistency: "strong"
+    });
   } catch (e) {
     return new Response(JSON.stringify({ success: false, error: "存储失败: " + e.message }), {
       status: 500,
@@ -64,7 +72,8 @@ export default async function onRequest(context) {
     success: true,
     data: {
       filename,
-      url: fullUrl
+      url: fullUrl,
+      size: buf.byteLength
     }
   }), { headers: { "Content-Type": "application/json" } });
 }
