@@ -1,14 +1,4 @@
 {
-  "kv": {
-    "bindings": [
-      {
-        "name": "IMG_KV",
-        "namespace_id": "ns-f26UzjPUlrP2"
-      }
-    ]
-  }
-}
-{
   "caches": [
     { "source": "/img/*", "cacheTtl": 2592000 }
   ]
