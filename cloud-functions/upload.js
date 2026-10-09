@@ -1,20 +1,23 @@
 import { getStore } from "@edgeone/pages-blob";
 
-function pad(n) { return String(n).padStart(2, "0"); }
-
 function genName() {
   const d = new Date();
-  // UTC+8 转北京时间
-  let h = d.getUTCHours() + 8;
-  let day = d.getUTCDate();
-  let month = d.getUTCMonth() + 1;
-  let year = d.getUTCFullYear();
-  if (h >= 24) { h -= 24; day += 1; }
-
-  const yymmddhhmm = String(year).slice(-2) + pad(month) + pad(day) + pad(h) + pad(d.getUTCMinutes());
-  const ss = pad(d.getUTCSeconds());
-  const ms = String(d.getUTCMilliseconds()).padStart(3, "0");
-  return `${yymmddhhmm}${ss}${ms}`;
+  // 明确用北京时间时区格式化，彻底避免 UTC 偏差
+  const str = d.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
+  // str 格式："2026/10/9 15:35:14"
+  const match = str.match(/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/);
+  if (!match) {
+    // fallback：用时间戳兜底
+    return String(Date.now());
+  }
+  const year = match[1].slice(-2);
+  const month = match[2].padStart(2, "0");
+  const day = match[3].padStart(2, "0");
+  const hour = match[4].padStart(2, "0");
+  const minute = match[5].padStart(2, "0");
+  const second = match[6].padStart(2, "0");
+  const ms = String(d.getMilliseconds()).padStart(3, "0");
+  return `${year}${month}${day}${hour}${minute}${second}${ms}`;
 }
 
 export default async function onRequest(context) {
@@ -55,7 +58,7 @@ export default async function onRequest(context) {
     });
   }
 
-  // 从请求头拼完整 URL
+  // 从请求头拼完整 URL（带域名）
   const host = context.request.headers.get("host") || "";
   const proto = context.request.headers.get("x-forwarded-proto") || "https";
   const fullUrl = `https://${host}/img/${filename}`;
